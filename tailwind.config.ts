@@ -62,6 +62,13 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Custom VisuaForge AI colors
+        'vf-blue': '#00BFFF', // Electric Blue
+        'vf-purple': '#8A2BE2', // Neon Violet
+        'vf-dark': '#0A0A0A', // Deep Black
+        'vf-gray': '#2C2C2C', // Dark Gray for subtle elements
+        'vf-glow-blue': 'rgba(0, 191, 255, 0.6)',
+        'vf-glow-purple': 'rgba(138, 43, 226, 0.6)',
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -85,10 +92,33 @@ export default {
             height: "0",
           },
         },
+        "particle-move": {
+          "0%": { transform: "translate(0, 0) scale(1)" },
+          "25%": { transform: "translate(20vw, 20vh) scale(1.2)" },
+          "50%": { transform: "translate(40vw, -10vh) scale(0.8)" },
+          "75%": { transform: "translate(-30vw, 15vh) scale(1.1)" },
+          "100%": { transform: "translate(0, 0) scale(1)" },
+        },
+        "scanner-pulse": {
+          "0%, 100%": { opacity: "0.7", transform: "scale(1)" },
+          "50%": { opacity: "1", transform: "scale(1.05)" },
+        },
+        "scanner-line": {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(100%)" },
+        },
+        "glow": {
+          "0%, 100%": { boxShadow: "0 0 5px var(--vf-glow-blue), 0 0 10px var(--vf-glow-purple)" },
+          "50%": { boxShadow: "0 0 10px var(--vf-glow-purple), 0 0 20px var(--vf-glow-blue)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "particle-move": "particle-move 30s infinite ease-in-out alternate",
+        "scanner-pulse": "scanner-pulse 2s infinite ease-in-out",
+        "scanner-line": "scanner-line 1.5s infinite linear",
+        "glow": "glow 2s infinite ease-in-out",
       },
     },
   },
