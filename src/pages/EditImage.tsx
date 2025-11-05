@@ -3,7 +3,11 @@ import { VisuaForgeButton } from '@/components/VisuaForgeButton';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import ScannerLoader from '@/components/ScannerLoader';
-import { UploadCloud, Sparkles } from 'lucide-react';
+import { UploadCloud, Sparkles, Download, Share2, GalleryHorizontal } from 'lucide-react';
+import { toast } from 'sonner';
+import { motion } from 'framer-motion';
+
+const WEBHOOK_URL = 'https://n8n-project-ivc9.onrender.com/webhook-test/image';
 
 const EditImage = () => {
   const [imageFile, setImageFile] = React.useState<File | null>(null);
@@ -17,6 +21,7 @@ const EditImage = () => {
     if (file) {
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
+      setModifiedImage(null); // Reset modified image on new upload
     }
   };
 
@@ -26,6 +31,7 @@ const EditImage = () => {
     if (file) {
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
+      setModifiedImage(null); // Reset modified image on new upload
     }
   };
 
@@ -34,18 +40,83 @@ const EditImage = () => {
   };
 
   const handleModify = async () => {
+    if (!imageFile || !instructions.trim()) {
+      toast.error("Veuillez uploader une image et fournir des instructions.");
+      return;
+    }
+
     setLoading(true);
     setModifiedImage(null);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    setModifiedImage("https://public.dyad.sh/assets/placeholder.svg"); // Placeholder image
-    setLoading(false);
+    toast.loading("Modification de l'image en cours...", { id: 'edit-toast' });
+
+    try {
+      const formData = new FormData();
+      formData.append('mode', 'edit');
+      formData.append('instruction', instructions);
+      formData.append('image', imageFile); // Append the actual file
+
+      const response = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        body: formData, // FormData handles Content-Type automatically
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP: ${response.status}`);
+      }
+
+      const data = await response.json();
+      // Assuming the webhook returns an object with an 'imageUrl' field
+      if (data && data.imageUrl) {
+        setModifiedImage(data.imageUrl);
+        toast.success("Image modifiée avec succès !", { id: 'edit-toast' });
+      } else {
+        throw new Error("Réponse du webhook invalide: imageUrl manquant.");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la modification de l'image:", error);
+      toast.error(`Échec de la modification de l'image: ${error instanceof Error ? error.message : 'Erreur inconnue'}`, { id: 'edit-toast' });
+      setModifiedImage("https://public.dyad.sh/assets/placeholder.svg"); // Fallback to placeholder on error
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDownload = (imageSrc: string) => {
+    const link = document.createElement('a');
+    link.href = imageSrc;
+    link.download = `visuaforge-ai-modified-image-${Date.now()}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Image téléchargée !");
+  };
+
+  const handleShare = (imageSrc: string) => {
+    navigator.clipboard.writeText(imageSrc);
+    toast.info("Lien de l'image copié dans le presse-papiers !");
+  };
+
+  const handleAddToGallery = (imageSrc: string, title: string) => {
+    const gallery = JSON.parse(localStorage.getItem('visuaforge-gallery') || '[]');
+    gallery.push({ id: Date.now().toString(), src: imageSrc, title: title, date: new Date().toISOString() });
+    localStorage.setItem('visuaforge-gallery', JSON.stringify(gallery));
+    toast.success("Image ajoutée à ta galerie !");
   };
 
   return (
-    <div className="min-h-[calc(100vh-16rem)] flex flex-col items-center justify-center py-12">
+    <motion.div
+      className="min-h-[calc(100vh-16rem)] flex flex-col items-center justify-center py-12"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <h1 className="text-5xl font-bold text-vf-blue mb-10">Modifier une image par IA</h1>
-      <div className="w-full max-w-3xl bg-vf-dark/60 backdrop-blur-md p-8 rounded-xl shadow-2xl border border-vf-gray animate-fade-in">
+      <motion.div
+        className="w-full max-w-3xl bg-vf-dark/60 backdrop-blur-md p-8 rounded-xl shadow-2xl border border-vf-gray animate-fade-in"
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.3 }}
+      >
         <div className="mb-6">
           <Label htmlFor="image-upload" className="text-lg text-vf-blue mb-2 block">Uploader une image</Label>
           <div
@@ -91,36 +162,52 @@ const EditImage = () => {
         </VisuaForgeButton>
 
         {loading && (
-          <div className="mt-10 flex flex-col items-center justify-center">
+          <motion.div
+            className="mt-10 flex flex-col items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             <ScannerLoader />
             <p className="mt-4 text-vf-blue text-lg animate-pulse">Modification en cours...</p>
-          </div>
+          </motion.div>
         )}
 
         {modifiedImage && !loading && (
-          <div className="mt-10 text-center">
+          <motion.div
+            className="mt-10 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             <h2 className="text-3xl font-bold text-vf-purple mb-6">Résultat :</h2>
             <div className="flex flex-col md:flex-row justify-center space-y-6 md:space-y-0 md:space-x-6">
               {imagePreview && (
-                <div className="relative rounded-lg overflow-hidden shadow-xl border border-vf-gray">
+                <div className="relative rounded-lg overflow-hidden shadow-xl border border-vf-gray p-4">
                   <h3 className="text-xl text-vf-gray mb-2">Avant</h3>
                   <img src={imagePreview} alt="Original Image" className="max-w-full h-auto rounded-lg" />
                 </div>
               )}
-              <div className="relative rounded-lg overflow-hidden shadow-2xl border border-vf-blue">
+              <div className="relative rounded-lg overflow-hidden shadow-2xl border border-vf-blue p-4">
                 <h3 className="text-xl text-vf-blue mb-2">Après</h3>
                 <img src={modifiedImage} alt="Modified AI Image" className="max-w-full h-auto rounded-lg" />
-                <div className="absolute inset-0 bg-gradient-to-t from-vf-dark/50 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4">
-                  <VisuaForgeButton variant="secondary" size="sm" onClick={() => alert('Téléchargement en cours!')}>
-                    Télécharger
+                <div className="absolute inset-0 bg-gradient-to-t from-vf-dark/50 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4 space-x-2">
+                  <VisuaForgeButton variant="secondary" size="sm" onClick={() => handleDownload(modifiedImage)}>
+                    <Download className="mr-1 h-4 w-4" /> Télécharger
+                  </VisuaForgeButton>
+                  <VisuaForgeButton variant="outline" size="sm" onClick={() => handleShare(modifiedImage)}>
+                    <Share2 className="mr-1 h-4 w-4" /> Partager
+                  </VisuaForgeButton>
+                  <VisuaForgeButton variant="ghost" size="sm" onClick={() => handleAddToGallery(modifiedImage, instructions)}>
+                    <GalleryHorizontal className="mr-1 h-4 w-4" /> Ajouter à la galerie
                   </VisuaForgeButton>
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

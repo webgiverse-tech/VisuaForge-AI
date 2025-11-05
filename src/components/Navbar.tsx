@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Image, PencilRuler, GalleryHorizontal, Crown } from 'lucide-react';
+import { Sparkles, Image, PencilRuler, GalleryHorizontal, Crown, Layers, BookOpen, Code, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Navbar = () => {
@@ -8,7 +8,11 @@ const Navbar = () => {
     { name: 'Générer', path: '/generate', icon: Image },
     { name: 'Modifier', path: '/edit', icon: PencilRuler },
     { name: 'Galerie', path: '/gallery', icon: GalleryHorizontal },
+    { name: 'Fonctionnalités', path: '/features', icon: Layers },
+    { name: 'Mode d\'emploi', path: '/how-it-works', icon: BookOpen },
+    { name: 'API', path: '/api-docs', icon: Code },
     { name: 'Premium', path: '/premium', icon: Crown },
+    { name: 'Contact', path: '/contact', icon: Mail },
   ];
 
   return (

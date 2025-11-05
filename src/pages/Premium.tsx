@@ -1,6 +1,7 @@
 import React from 'react';
 import { VisuaForgeButton } from '@/components/VisuaForgeButton';
-import { CheckCircle, Star, Zap } from 'lucide-react';
+import { CheckCircle, Star, Zap, X } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Premium = () => {
   const plans = [
@@ -8,58 +9,110 @@ const Premium = () => {
       name: 'Gratuit',
       price: '0€',
       features: [
-        '5 générations par jour',
-        'Accès aux styles de base',
-        'Stockage limité',
-        'Support communautaire',
+        { text: '10 générations par mois', available: true },
+        { text: 'Accès aux styles de base', available: true },
+        { text: 'Watermark sur les images', available: true },
+        { text: 'Stockage limité', available: true },
+        { text: 'Support communautaire', available: true },
+        { text: 'Générations prioritaires', available: false },
+        { text: 'Accès API', available: false },
+        { text: 'Stockage privé illimité', available: false },
       ],
       cta: 'Commencer Gratuitement',
       variant: 'outline',
     },
     {
       name: 'Pro',
-      price: '9.99€/mois',
+      price: '19€/mois',
       features: [
-        '50 générations par jour',
-        'Tous les styles avancés',
-        'Stockage étendu',
-        'Support prioritaire',
-        'Accès aux fonctionnalités bêta',
+        { text: '200 générations par mois', available: true },
+        { text: 'Tous les styles avancés', available: true },
+        { text: 'Sans watermark', available: true },
+        { text: 'Stockage étendu', available: true },
+        { text: 'Support prioritaire', available: true },
+        { text: 'Générations prioritaires', available: true },
+        { text: 'Accès aux fonctionnalités bêta', available: true },
+        { text: 'Accès API', available: false },
+        { text: 'Stockage privé illimité', available: false },
       ],
       cta: 'Passer à Pro',
       variant: 'default',
+      popular: true,
     },
     {
       name: 'Illimité',
-      price: '29.99€/mois',
+      price: '49€/mois',
       features: [
-        'Générations illimitées',
-        'Tous les styles & modèles',
-        'Stockage illimité',
-        'Support 24/7',
-        'Accès exclusif aux nouveautés',
-        'API privée',
+        { text: 'Générations illimitées', available: true },
+        { text: 'Tous les styles & modèles', available: true },
+        { text: 'Sans watermark', available: true },
+        { text: 'Stockage illimité', available: true },
+        { text: 'Support 24/7', available: true },
+        { text: 'Générations prioritaires', available: true },
+        { text: 'Accès exclusif aux nouveautés', available: true },
+        { text: 'API privée', available: true },
+        { text: 'Stockage privé illimité', available: true },
       ],
       cta: 'Devenir Illimité',
       variant: 'secondary',
     },
   ];
 
-  return (
-    <div className="min-h-[calc(100vh-16rem)] py-12">
-      <h1 className="text-5xl font-bold text-vf-blue text-center mb-10">Débloque ton potentiel créatif</h1>
-      <p className="text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto">
-        Passe au niveau supérieur avec nos plans Premium et accède à des fonctionnalités exclusives pour des créations sans limites.
-      </p>
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+  const cardVariants = {
+    hidden: { y: 50, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 10,
+      },
+    },
+  };
+
+  return (
+    <motion.div
+      className="min-h-[calc(100vh-16rem)] py-12"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      <motion.h1
+        className="text-5xl font-bold text-vf-blue text-center mb-10"
+        variants={cardVariants}
+      >
+        Débloque ton potentiel créatif
+      </motion.h1>
+      <motion.p
+        className="text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
+        variants={cardVariants}
+      >
+        Passe au niveau supérieur avec nos plans Premium et accède à des fonctionnalités exclusives pour des créations sans limites.
+      </motion.p>
+
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"
+        variants={containerVariants}
+      >
         {plans.map((plan, index) => (
-          <div
+          <motion.div
             key={plan.name}
-            className="relative bg-vf-dark/60 backdrop-blur-md p-8 rounded-xl shadow-2xl border border-vf-gray flex flex-col items-center text-center transform hover:scale-105 transition-all duration-300 animate-fade-in"
-            style={{ animationDelay: `${index * 0.1}s` }}
+            className="relative bg-vf-dark/60 backdrop-blur-md p-8 rounded-xl shadow-2xl border border-vf-gray flex flex-col items-center text-center transform hover:scale-105 transition-all duration-300"
+            variants={cardVariants}
+            whileHover={{ scale: 1.03, boxShadow: "0 0 25px rgba(0, 191, 255, 0.3)" }}
           >
-            {plan.name === 'Pro' && (
+            {plan.popular && (
               <div className="absolute -top-4 right-4 bg-vf-purple text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-glow">
                 Populaire
               </div>
@@ -69,18 +122,22 @@ const Premium = () => {
             <ul className="text-lg text-white space-y-3 mb-8 text-left w-full">
               {plan.features.map((feature, i) => (
                 <li key={i} className="flex items-center">
-                  <CheckCircle className="w-5 h-5 text-vf-blue mr-3 flex-shrink-0" />
-                  <span>{feature}</span>
+                  {feature.available ? (
+                    <CheckCircle className="w-5 h-5 text-vf-blue mr-3 flex-shrink-0" />
+                  ) : (
+                    <X className="w-5 h-5 text-vf-gray mr-3 flex-shrink-0" />
+                  )}
+                  <span className={!feature.available ? "text-vf-gray line-through" : ""}>{feature.text}</span>
                 </li>
               ))}
             </ul>
             <VisuaForgeButton variant={plan.variant as any} className="w-full text-lg py-3 mt-auto">
               {plan.cta}
             </VisuaForgeButton>
-          </div>
+          </motion.div>
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
