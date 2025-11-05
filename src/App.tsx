@@ -18,9 +18,10 @@ import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import FAQ from "./pages/FAQ";
 import NotFound from "./pages/NotFound";
-import Login from "./pages/Login"; // New
-import Register from "./pages/Register"; // New
-import { SessionContextProvider } from "./components/SessionContextProvider"; // New
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import AdminDashboard from "@/pages/Admin/Dashboard.tsx"; // Using alias path
+import { SessionContextProvider } from "./components/SessionContextProvider";
 
 const queryClient = new QueryClient();
 
@@ -30,7 +31,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <SessionContextProvider> {/* Wrap with SessionContextProvider */}
+        <SessionContextProvider>
           <Routes>
             <Route path="/" element={<Layout><Index /></Layout>} />
             <Route path="/generate" element={<Layout><GenerateImage /></Layout>} />
@@ -45,8 +46,9 @@ const App = () => (
             <Route path="/terms" element={<Layout><Terms /></Layout>} />
             <Route path="/privacy" element={<Layout><Privacy /></Layout>} />
             <Route path="/faq" element={<Layout><FAQ /></Layout>} />
-            <Route path="/login" element={<Layout><Login /></Layout>} /> {/* New Login Route */}
-            <Route path="/register" element={<Layout><Register /></Layout>} /> {/* New Register Route */}
+            <Route path="/login" element={<Layout><Login /></Layout>} />
+            <Route path="/register" element={<Layout><Register /></Layout>} />
+            <Route path="/admin/dashboard" element={<Layout><AdminDashboard /></Layout>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
