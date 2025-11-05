@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Github, Twitter, Discord } from 'lucide-react';
+import { Github, Twitter, MessageSquare } from 'lucide-react'; // Changed Discord to MessageSquare
 
 const Footer = () => {
   return (
@@ -21,7 +21,7 @@ const Footer = () => {
             <Twitter size={24} />
           </a>
           <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="text-vf-gray hover:text-vf-blue transition-colors duration-300">
-            <Discord size={24} />
+            <MessageSquare size={24} /> {/* Changed Discord to MessageSquare */}
           </a>
         </div>
         <p className="text-sm">&copy; {new Date().getFullYear()} VisuaForge AI. Tous droits réservés.</p>
