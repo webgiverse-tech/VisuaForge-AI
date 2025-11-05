@@ -13,6 +13,7 @@ const visuaForgeButtonVariants = cva(
         default: "bg-vf-blue text-primary-foreground hover:bg-vf-purple/90 animate-glow",
         outline: "border border-vf-blue bg-transparent text-vf-blue hover:bg-vf-blue hover:text-primary-foreground animate-glow",
         secondary: "bg-vf-purple text-primary-foreground hover:bg-vf-blue/90 animate-glow",
+        destructive: "bg-red-600 text-white hover:bg-red-700", // Added destructive variant
         ghost: "hover:bg-vf-gray hover:text-vf-blue",
         link: "text-vf-blue underline-offset-4 hover:underline",
       },

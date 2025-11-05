@@ -1,6 +1,6 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Rocket, Video, User, Filter, CheckCircle } from 'lucide-react';
+import { motion, Variants } from 'framer-motion'; // Import Variants
+import { Rocket, Video, User, Filter, CheckCircle, Sparkles, Layers, Globe, MessageSquare } from 'lucide-react'; // Import missing icons
 
 const roadmapItems = [
   {
@@ -34,7 +34,7 @@ const roadmapItems = [
 ];
 
 const Roadmap = () => {
-  const containerVariants = {
+  const containerVariants: Variants = { // Explicitly type containerVariants
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -44,7 +44,7 @@ const Roadmap = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = { // Explicitly type itemVariants
     hidden: { y: 50, opacity: 0 },
     visible: {
       y: 0,

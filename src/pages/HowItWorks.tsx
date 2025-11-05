@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion'; // Import Variants
 import { Lightbulb, Palette, Sparkles, Download, PlayCircle } from 'lucide-react';
 
 const steps = [
@@ -26,7 +26,7 @@ const steps = [
 ];
 
 const HowItWorks = () => {
-  const containerVariants = {
+  const containerVariants: Variants = { // Explicitly type containerVariants
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -36,7 +36,7 @@ const HowItWorks = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = { // Explicitly type itemVariants
     hidden: { y: 50, opacity: 0 },
     visible: {
       y: 0,
@@ -94,7 +94,7 @@ const HowItWorks = () => {
         <h2 className="text-4xl font-bold text-vf-blue mb-6">Conseils de Pro</h2>
         <div className="bg-vf-dark/60 backdrop-blur-md p-8 rounded-xl shadow-2xl border border-vf-gray">
           <p className="text-xl text-white mb-4">
-            💡 Essayez des prompts détaillés pour de meilleurs résultats. Incluez des adjectifs, des couleurs, des ambiances et des styles spécifiques.
+            💡 Essayez des prompts détaillés pour de meilleurs résultats. Incluez des adjectifs, des couleurs, l'éclairage, l'ambiance et des styles spécifiques.
           </p>
           <p className="text-xl text-white">
             ✨ N'hésitez pas à expérimenter ! L'IA est là pour explorer ta créativité.

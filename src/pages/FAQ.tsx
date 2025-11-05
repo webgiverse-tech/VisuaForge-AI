@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion'; // Import Variants
 import {
   Accordion,
   AccordionContent,
@@ -40,7 +40,7 @@ const faqItems = [
 ];
 
 const FAQ = () => {
-  const containerVariants = {
+  const containerVariants: Variants = { // Explicitly type containerVariants
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -50,7 +50,7 @@ const FAQ = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = { // Explicitly type itemVariants
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion'; // Import Variants
 import { Mail, MessageSquare, Twitter, Github } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -31,7 +31,7 @@ const Contact = () => {
     setFormData({ name: '', email: '', message: '' });
   };
 
-  const containerVariants = {
+  const containerVariants: Variants = { // Explicitly type containerVariants
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -41,7 +41,7 @@ const Contact = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = { // Explicitly type itemVariants
     hidden: { y: 50, opacity: 0 },
     visible: {
       y: 0,

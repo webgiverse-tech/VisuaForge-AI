@@ -1,10 +1,10 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Sparkles, HighResolution, Brush, Layers, Code, Brain } from 'lucide-react';
+import { motion, Variants } from 'framer-motion'; // Import Variants
+import { Sparkles, Maximize, Brush, Layers, Code, Brain } from 'lucide-react'; // Replaced HighResolution with Maximize
 
 const featureCards = [
   {
-    icon: HighResolution,
+    icon: Maximize, // Using Maximize icon
     title: "Génération Haute Résolution",
     description: "Crée des images d'une clarté et d'un détail exceptionnels, parfaites pour tous tes projets.",
     color: "text-vf-blue",
@@ -42,7 +42,7 @@ const featureCards = [
 ];
 
 const Features = () => {
-  const containerVariants = {
+  const containerVariants: Variants = { // Explicitly type containerVariants
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -52,7 +52,7 @@ const Features = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = { // Explicitly type itemVariants
     hidden: { y: 50, opacity: 0 },
     visible: {
       y: 0,

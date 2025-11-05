@@ -1,6 +1,6 @@
 import React from 'react';
-import { Image, Download, Share2, Trash2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Image, Download, Share2, Trash2, X } from 'lucide-react'; // Import X icon
+import { motion, Variants } from 'framer-motion'; // Import Variants
 import { VisuaForgeButton } from '@/components/VisuaForgeButton';
 import { toast } from 'sonner';
 
@@ -45,7 +45,7 @@ const Gallery = () => {
     toast.info("Lien de l'image copié dans le presse-papiers !");
   };
 
-  const containerVariants = {
+  const containerVariants: Variants = { // Explicitly type containerVariants
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -55,7 +55,7 @@ const Gallery = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = { // Explicitly type itemVariants
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,

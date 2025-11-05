@@ -2,7 +2,7 @@ import { MadeWithDyad } from "@/components/made-with-dyad";
 import { VisuaForgeButton } from "@/components/VisuaForgeButton";
 import { Link } from "react-router-dom";
 import { Sparkles, Image, PencilRuler, Lightbulb, Palette, Combine } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion"; // Import Variants
 
 const mockGalleryImages = [
   "https://public.dyad.sh/assets/placeholder.svg",
@@ -32,7 +32,7 @@ const featureCards = [
 ];
 
 const Index = () => {
-  const containerVariants = {
+  const containerVariants: Variants = { // Explicitly type containerVariants
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -42,7 +42,7 @@ const Index = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = { // Explicitly type itemVariants
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,

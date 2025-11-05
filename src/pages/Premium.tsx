@@ -1,7 +1,7 @@
 import React from 'react';
 import { VisuaForgeButton } from '@/components/VisuaForgeButton';
 import { CheckCircle, Star, Zap, X } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion'; // Import Variants
 
 const Premium = () => {
   const plans = [
@@ -58,7 +58,7 @@ const Premium = () => {
     },
   ];
 
-  const containerVariants = {
+  const containerVariants: Variants = { // Explicitly type containerVariants
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -68,7 +68,7 @@ const Premium = () => {
     },
   };
 
-  const cardVariants = {
+  const cardVariants: Variants = { // Explicitly type cardVariants
     hidden: { y: 50, opacity: 0 },
     visible: {
       y: 0,
