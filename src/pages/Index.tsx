@@ -1,7 +1,7 @@
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { VisuaForgeButton } from "@/components/VisuaForgeButton";
 import { Link } from "react-router-dom";
-import { Sparkles, Image, PencilRuler, Lightbulb, Palette, Combine } from "lucide-react";
+import { Sparkles, Image, PencilRuler, Lightbulb, Palette, Combine, MessageSquare, Quote, Zap, Download, BookOpen } from "lucide-react";
 import { motion, Variants } from "framer-motion"; // Import Variants
 
 const mockGalleryImages = [
@@ -28,6 +28,44 @@ const featureCards = [
     icon: Combine,
     title: "Styliser ou combiner des visuels",
     description: "Expérimente avec des styles artistiques et fusionne des éléments.",
+  },
+];
+
+const howItWorksSteps = [
+  {
+    icon: Lightbulb,
+    title: "Décris ta vision",
+    description: "Entrez un prompt textuel détaillé pour l'image que tu as en tête.",
+  },
+  {
+    icon: Palette,
+    title: "Choisis ton style",
+    description: "Sélectionne parmi une variété de styles artistiques pour donner vie à ta vision.",
+  },
+  {
+    icon: Sparkles,
+    title: "Génère instantanément",
+    description: "Notre IA transforme tes mots en une image unique en quelques secondes.",
+  },
+  {
+    icon: Download,
+    title: "Télécharge et partage",
+    description: "Exportez tes créations en haute résolution ou partage-les facilement.",
+  },
+];
+
+const testimonials = [
+  {
+    quote: "VisuaForge AI a révolutionné ma façon de créer du contenu. Les résultats sont incroyables et le processus est tellement intuitif !",
+    author: "Sophie L.",
+  },
+  {
+    quote: "J'ai pu donner vie à des idées que je pensais impossibles. L'outil de modification est un game-changer.",
+    author: "Marc D.",
+  },
+  {
+    quote: "La qualité des images générées est époustouflante. C'est un outil indispensable pour tout créateur.",
+    author: "Émilie R.",
   },
 ];
 
@@ -119,6 +157,46 @@ const Index = () => {
         </motion.div>
       </section>
 
+      {/* New Section: How It Works (Simplified) */}
+      <section className="w-full max-w-6xl relative z-10 mb-20">
+        <motion.h2
+          className="text-4xl font-bold text-vf-blue mb-12"
+          variants={itemVariants}
+        >
+          Comment ça marche ?
+        </motion.h2>
+        <motion.p
+          className="text-xl text-vf-gray mb-10 max-w-3xl mx-auto"
+          variants={itemVariants}
+        >
+          Créez des images époustouflantes en quelques étapes simples.
+        </motion.p>
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+          variants={containerVariants}
+        >
+          {howItWorksSteps.map((step, index) => (
+            <motion.div
+              key={index}
+              className="bg-vf-dark/60 backdrop-blur-md p-6 rounded-xl shadow-2xl border border-vf-gray flex flex-col items-center text-center hover:border-vf-blue transition-all duration-300"
+              variants={itemVariants}
+              whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(0, 191, 255, 0.4)" }}
+            >
+              <step.icon className="w-12 h-12 text-vf-blue mb-4" />
+              <h3 className="text-xl font-semibold text-white mb-2">{step.title}</h3>
+              <p className="text-vf-gray text-sm">{step.description}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+        <motion.div variants={itemVariants} className="mt-12">
+          <Link to="/how-it-works">
+            <VisuaForgeButton variant="outline" size="lg" className="text-lg px-8 py-4">
+              <BookOpen className="mr-2 h-5 w-5" /> Voir le guide complet
+            </VisuaForgeButton>
+          </Link>
+        </motion.div>
+      </section>
+
       {/* Mock Gallery Section */}
       <section className="w-full max-w-6xl relative z-10 mb-20">
         <motion.h2
@@ -147,6 +225,33 @@ const Index = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-vf-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                 <p className="text-sm text-white font-medium">Image {index + 1}</p>
               </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </section>
+
+      {/* New Section: Testimonials */}
+      <section className="w-full max-w-6xl relative z-10 mb-20">
+        <motion.h2
+          className="text-4xl font-bold text-vf-blue mb-12"
+          variants={itemVariants}
+        >
+          Ce que nos utilisateurs disent
+        </motion.h2>
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          variants={containerVariants}
+        >
+          {testimonials.map((testimonial, index) => (
+            <motion.div
+              key={index}
+              className="bg-vf-dark/60 backdrop-blur-md p-8 rounded-xl shadow-2xl border border-vf-gray flex flex-col items-center text-center hover:border-vf-purple transition-all duration-300"
+              variants={itemVariants}
+              whileHover={{ scale: 1.03, boxShadow: "0 0 20px rgba(138, 43, 226, 0.4)" }}
+            >
+              <Quote className="w-12 h-12 text-vf-purple mb-4" />
+              <p className="text-lg text-white italic mb-4">"{testimonial.quote}"</p>
+              <p className="text-vf-gray font-semibold">- {testimonial.author}</p>
             </motion.div>
           ))}
         </motion.div>
