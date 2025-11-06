@@ -59,37 +59,37 @@ const Roadmap = () => {
 
   return (
     <motion.div
-      className="min-h-[calc(100vh-16rem)] py-12 px-4 sm:px-6 md:px-8"
+      className="min-h-[calc(100vh-16rem)] py-12"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
       <motion.h1
-        className="text-h1 font-bold text-vf-blue text-center mb-10"
+        className="text-5xl font-bold text-vf-blue text-center mb-10"
         variants={itemVariants}
       >
         Notre Feuille de Route
       </motion.h1>
       <motion.p
-        className="text-p text-vf-gray text-center mb-12 max-w-[95%] sm:max-w-[80%] md:max-w-[70%] mx-auto"
+        className="text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
         variants={itemVariants}
       >
         Découvrez les fonctionnalités que nous développons pour l'avenir de VisuaForge AI.
       </motion.p>
 
-      <div className="max-w-[95%] sm:max-w-[80%] md:max-w-4xl mx-auto space-y-12">
+      <div className="max-w-4xl mx-auto space-y-12">
         {roadmapItems.map((phase, index) => (
           <motion.div
             key={index}
-            className="bg-vf-dark/60 backdrop-blur-md p-6 sm:p-8 rounded-xl shadow-2xl border border-vf-gray"
+            className="bg-vf-dark/60 backdrop-blur-md p-8 rounded-xl shadow-2xl border border-vf-gray"
             variants={itemVariants}
           >
-            <h2 className="text-h2 font-bold text-vf-purple mb-6 flex items-center">
+            <h2 className="text-3xl font-bold text-vf-purple mb-6 flex items-center">
               <Rocket className="mr-3 h-7 w-7" /> {phase.phase}
             </h2>
             <ul className="space-y-4">
               {phase.features.map((feature, fIndex) => (
-                <li key={fIndex} className="flex items-center text-p text-white">
+                <li key={fIndex} className="flex items-center text-lg text-white">
                   {feature.completed ? (
                     <CheckCircle className="w-6 h-6 text-vf-blue mr-3 flex-shrink-0" />
                   ) : (

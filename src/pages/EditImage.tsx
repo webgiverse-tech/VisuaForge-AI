@@ -105,20 +105,20 @@ const EditImage = () => {
 
   return (
     <motion.div
-      className="min-h-[calc(100vh-16rem)] flex flex-col items-center justify-center py-12 px-4 sm:px-6 md:px-8"
+      className="min-h-[calc(100vh-16rem)] flex flex-col items-center justify-center py-12"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <h1 className="text-h1 font-bold text-vf-blue mb-10">Modifier une image par IA</h1>
+      <h1 className="text-5xl font-bold text-vf-blue mb-10">Modifier une image par IA</h1>
       <motion.div
-        className="w-full max-w-[95%] sm:max-w-[80%] md:max-w-[70%] bg-vf-dark/60 backdrop-blur-md p-6 sm:p-8 rounded-xl shadow-2xl border border-vf-gray animate-fade-in"
+        className="w-full max-w-3xl bg-vf-dark/60 backdrop-blur-md p-8 rounded-xl shadow-2xl border border-vf-gray animate-fade-in"
         initial={{ scale: 0.95 }}
         animate={{ scale: 1 }}
         transition={{ duration: 0.3 }}
       >
         <div className="mb-6">
-          <Label htmlFor="image-upload" className="text-p text-lg text-vf-blue mb-2 block">Uploader une image</Label>
+          <Label htmlFor="image-upload" className="text-lg text-vf-blue mb-2 block">Uploader une image</Label>
           <div
             className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-vf-purple rounded-lg cursor-pointer bg-vf-gray/20 hover:bg-vf-gray/30 transition-colors duration-300"
             onDrop={handleDrop}
@@ -130,8 +130,8 @@ const EditImage = () => {
             ) : (
               <>
                 <UploadCloud className="w-12 h-12 text-vf-purple mb-3" />
-                <p className="text-p text-white">Glisse & dépose ou clique pour uploader</p>
-                <p className="text-p text-sm text-vf-gray">PNG, JPG, GIF jusqu'à 10MB</p>
+                <p className="text-white text-lg">Glisse & dépose ou clique pour uploader</p>
+                <p className="text-sm text-vf-gray">PNG, JPG, GIF jusqu'à 10MB</p>
               </>
             )}
             <input
@@ -144,19 +144,19 @@ const EditImage = () => {
           </div>
         </div>
         <div className="mb-6">
-          <Label htmlFor="instructions" className="text-p text-lg text-vf-blue mb-2 block">Instructions de modification</Label>
+          <Label htmlFor="instructions" className="text-lg text-vf-blue mb-2 block">Instructions de modification</Label>
           <Textarea
             id="instructions"
             placeholder="Ex: 'ajoute un fond spatial', 'rends-le plus réaliste', 'change la couleur en vert néon'"
             value={instructions}
             onChange={(e) => setInstructions(e.target.value)}
-            className="bg-vf-gray/30 border-vf-gray text-p text-white placeholder:text-vf-gray focus:border-vf-blue focus:ring-vf-blue h-32"
+            className="bg-vf-gray/30 border-vf-gray text-white placeholder:text-vf-gray focus:border-vf-blue focus:ring-vf-blue h-32"
           />
         </div>
         <VisuaForgeButton
           onClick={handleModify}
           disabled={loading || !imageFile || !instructions.trim()}
-          className="w-full text-button-text py-3"
+          className="w-full text-lg py-3"
         >
           <Sparkles className="mr-2 h-5 w-5" /> Modifier l'image
         </VisuaForgeButton>
@@ -169,7 +169,7 @@ const EditImage = () => {
             transition={{ duration: 0.5 }}
           >
             <ScannerLoader />
-            <p className="mt-4 text-vf-blue text-p animate-pulse">Modification en cours...</p>
+            <p className="mt-4 text-vf-blue text-lg animate-pulse">Modification en cours...</p>
           </motion.div>
         )}
 
@@ -180,25 +180,25 @@ const EditImage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h2 className="text-h2 font-bold text-vf-purple mb-6">Résultat :</h2>
+            <h2 className="text-3xl font-bold text-vf-purple mb-6">Résultat :</h2>
             <div className="flex flex-col md:flex-row justify-center space-y-6 md:space-y-0 md:space-x-6">
               {imagePreview && (
-                <div className="relative rounded-lg overflow-hidden shadow-xl border border-vf-gray p-4 max-w-full md:max-w-[48%]">
-                  <h3 className="text-h2 text-vf-gray mb-2">Avant</h3>
+                <div className="relative rounded-lg overflow-hidden shadow-xl border border-vf-gray p-4">
+                  <h3 className="text-xl text-vf-gray mb-2">Avant</h3>
                   <img src={imagePreview} alt="Original Image" className="max-w-full h-auto rounded-lg" />
                 </div>
               )}
-              <div className="relative rounded-lg overflow-hidden shadow-2xl border border-vf-blue p-4 max-w-full md:max-w-[48%]">
-                <h3 className="text-h2 text-vf-blue mb-2">Après</h3>
+              <div className="relative rounded-lg overflow-hidden shadow-2xl border border-vf-blue p-4">
+                <h3 className="text-xl text-vf-blue mb-2">Après</h3>
                 <img src={modifiedImage} alt="Modified AI Image" className="max-w-full h-auto rounded-lg" />
                 <div className="absolute inset-0 bg-gradient-to-t from-vf-dark/50 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4 space-x-2">
-                  <VisuaForgeButton variant="secondary" size="sm" onClick={() => handleDownload(modifiedImage)} className="text-button-text">
+                  <VisuaForgeButton variant="secondary" size="sm" onClick={() => handleDownload(modifiedImage)}>
                     <Download className="mr-1 h-4 w-4" /> Télécharger
                   </VisuaForgeButton>
-                  <VisuaForgeButton variant="outline" size="sm" onClick={() => handleShare(modifiedImage)} className="text-button-text">
+                  <VisuaForgeButton variant="outline" size="sm" onClick={() => handleShare(modifiedImage)}>
                     <Share2 className="mr-1 h-4 w-4" /> Partager
                   </VisuaForgeButton>
-                  <VisuaForgeButton variant="ghost" size="sm" onClick={() => handleAddToGallery(modifiedImage, instructions)} className="text-button-text">
+                  <VisuaForgeButton variant="ghost" size="sm" onClick={() => handleAddToGallery(modifiedImage, instructions)}>
                     <GalleryHorizontal className="mr-1 h-4 w-4" /> Ajouter à la galerie
                   </VisuaForgeButton>
                 </div>

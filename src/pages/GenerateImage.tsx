@@ -92,48 +92,48 @@ const GenerateImage = () => {
 
   return (
     <motion.div
-      className="min-h-[calc(100vh-16rem)] flex flex-col items-center justify-center py-12 px-4 sm:px-6 md:px-8"
+      className="min-h-[calc(100vh-16rem)] flex flex-col items-center justify-center py-12"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <h1 className="text-h1 font-bold text-vf-blue mb-10">Générer une image par IA</h1>
+      <h1 className="text-5xl font-bold text-vf-blue mb-10">Générer une image par IA</h1>
       <motion.div
-        className="w-full max-w-[95%] sm:max-w-[80%] md:max-w-[70%] bg-vf-dark/60 backdrop-blur-md p-6 sm:p-8 rounded-xl shadow-2xl border border-vf-gray animate-fade-in"
+        className="w-full max-w-3xl bg-vf-dark/60 backdrop-blur-md p-8 rounded-xl shadow-2xl border border-vf-gray animate-fade-in"
         initial={{ scale: 0.95 }}
         animate={{ scale: 1 }}
         transition={{ duration: 0.3 }}
       >
         <div className="mb-6">
-          <Label htmlFor="prompt" className="text-p text-vf-blue mb-2 block">Ton idée (prompt textuel)</Label>
+          <Label htmlFor="prompt" className="text-lg text-vf-blue mb-2 block">Ton idée (prompt textuel)</Label>
           <Textarea
             id="prompt"
             placeholder="Décris l'image que tu veux générer, ex: 'Un dragon cyberpunk crachant du feu néon dans une ville futuriste'"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            className="bg-vf-gray/30 border-vf-gray text-p text-white placeholder:text-vf-gray focus:border-vf-blue focus:ring-vf-blue h-32"
+            className="bg-vf-gray/30 border-vf-gray text-white placeholder:text-vf-gray focus:border-vf-blue focus:ring-vf-blue h-32"
           />
         </div>
         <div className="mb-8">
-          <Label htmlFor="style" className="text-p text-vf-blue mb-2 block">Style d'image</Label>
+          <Label htmlFor="style" className="text-lg text-vf-blue mb-2 block">Style d'image</Label>
           <Select value={style} onValueChange={setStyle}>
-            <SelectTrigger className="w-full bg-vf-gray/30 border-vf-gray text-p text-white focus:border-vf-blue focus:ring-vf-blue">
+            <SelectTrigger className="w-full bg-vf-gray/30 border-vf-gray text-white focus:border-vf-blue focus:ring-vf-blue">
               <SelectValue placeholder="Sélectionne un style" />
             </SelectTrigger>
             <SelectContent className="bg-vf-dark border-vf-gray text-white">
-              <SelectItem value="realistic" className="text-p">Réaliste</SelectItem>
-              <SelectItem value="cartoon" className="text-p">Cartoon</SelectItem>
-              <SelectItem value="3d" className="text-p">3D Rendu</SelectItem>
-              <SelectItem value="digital-art" className="text-p">Digital Art</SelectItem>
-              <SelectItem value="futuristic" className="text-p">Futuriste</SelectItem>
-              <SelectItem value="abstract" className="text-p">Abstrait</SelectItem>
+              <SelectItem value="realistic">Réaliste</SelectItem>
+              <SelectItem value="cartoon">Cartoon</SelectItem>
+              <SelectItem value="3d">3D Rendu</SelectItem>
+              <SelectItem value="digital-art">Digital Art</SelectItem>
+              <SelectItem value="futuristic">Futuriste</SelectItem>
+              <SelectItem value="abstract">Abstrait</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <VisuaForgeButton
           onClick={handleGenerate}
           disabled={loading || !prompt.trim()}
-          className="w-full text-button-text py-3"
+          className="w-full text-lg py-3"
         >
           <Sparkles className="mr-2 h-5 w-5" /> Générer avec IA
         </VisuaForgeButton>
@@ -146,7 +146,7 @@ const GenerateImage = () => {
             transition={{ duration: 0.5 }}
           >
             <ScannerLoader />
-            <p className="mt-4 text-vf-blue text-p animate-pulse">Génération en cours...</p>
+            <p className="mt-4 text-vf-blue text-lg animate-pulse">Génération en cours...</p>
           </motion.div>
         )}
 
@@ -157,17 +157,17 @@ const GenerateImage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h2 className="text-h2 font-bold text-vf-purple mb-6">Ton image générée :</h2>
-            <div className="relative inline-block rounded-lg overflow-hidden shadow-2xl border border-vf-blue max-w-full h-auto">
+            <h2 className="text-3xl font-bold text-vf-purple mb-6">Ton image générée :</h2>
+            <div className="relative inline-block rounded-lg overflow-hidden shadow-2xl border border-vf-blue">
               <img src={generatedImage} alt="Generated AI Image" className="max-w-full h-auto rounded-lg" />
               <div className="absolute inset-0 bg-gradient-to-t from-vf-dark/50 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4 space-x-2">
-                <VisuaForgeButton variant="secondary" size="sm" onClick={handleDownload} className="text-button-text">
+                <VisuaForgeButton variant="secondary" size="sm" onClick={handleDownload}>
                   <Download className="mr-1 h-4 w-4" /> Télécharger
                 </VisuaForgeButton>
-                <VisuaForgeButton variant="outline" size="sm" onClick={handleShare} className="text-button-text">
+                <VisuaForgeButton variant="outline" size="sm" onClick={handleShare}>
                   <Share2 className="mr-1 h-4 w-4" /> Partager
                 </VisuaForgeButton>
-                <VisuaForgeButton variant="ghost" size="sm" onClick={handleAddToGallery} className="text-button-text">
+                <VisuaForgeButton variant="ghost" size="sm" onClick={handleAddToGallery}>
                   <GalleryHorizontal className="mr-1 h-4 w-4" /> Ajouter à la galerie
                 </VisuaForgeButton>
               </div>

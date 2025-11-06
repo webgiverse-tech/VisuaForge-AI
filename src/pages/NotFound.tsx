@@ -1,6 +1,5 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { motion } from "framer-motion";
 
 const NotFound = () => {
   const location = useLocation();
@@ -13,20 +12,15 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <motion.div
-      className="min-h-screen flex items-center justify-center bg-vf-dark text-white px-4 sm:px-6 md:px-8"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="text-center bg-vf-dark/60 backdrop-blur-md p-8 rounded-xl shadow-2xl border border-vf-gray max-w-md w-full">
-        <h1 className="text-h1 font-bold mb-4 text-vf-blue">404</h1>
-        <p className="text-h2 text-vf-gray mb-4">Oops! Page non trouvée</p>
-        <a href="/" className="text-button-text text-vf-blue hover:text-vf-purple underline">
-          Retourner à l'accueil
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold mb-4">404</h1>
+        <p className="text-xl text-gray-600 mb-4">Oops! Page not found</p>
+        <a href="/" className="text-blue-500 hover:text-blue-700 underline">
+          Return to Home
         </a>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
