@@ -1,32 +1,72 @@
 import React from 'react';
-import { Image, Download, Share2, Trash2, X } from 'lucide-react'; // Import X icon
-import { motion, Variants } from 'framer-motion'; // Import Variants
+import { Image, Download, Share2, Trash2, X } from 'lucide-react';
+import { motion, Variants } from 'framer-motion';
 import { VisuaForgeButton } from '@/components/VisuaForgeButton';
 import { toast } from 'sonner';
+import { useSupabase } from '@/components/SessionContextProvider'; // Import useSupabase
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 interface GalleryImage {
   id: string;
-  src: string;
-  title: string;
-  date: string;
+  image_url: string;
+  prompt: string | null;
+  style: string | null;
+  mode: string;
+  created_at: string;
 }
 
 const Gallery = () => {
+  const { session, supabase } = useSupabase();
   const [galleryImages, setGalleryImages] = React.useState<GalleryImage[]>([]);
   const [selectedImage, setSelectedImage] = React.useState<GalleryImage | null>(null);
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    const storedGallery = JSON.parse(localStorage.getItem('visuaforge-gallery') || '[]');
-    setGalleryImages(storedGallery);
-  }, []);
+    if (session) {
+      fetchGalleryImages();
+    } else {
+      setGalleryImages([]);
+      setLoading(false);
+    }
+  }, [session]);
 
-  const handleDelete = (id: string) => {
-    const updatedGallery = galleryImages.filter(img => img.id !== id);
-    setGalleryImages(updatedGallery);
-    localStorage.setItem('visuaforge-gallery', JSON.stringify(updatedGallery));
-    toast.success("Image supprimée de la galerie.");
-    if (selectedImage?.id === id) {
-      setSelectedImage(null);
+  const fetchGalleryImages = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('generated_images')
+      .select('*')
+      .eq('user_id', session?.user?.id)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error("Error fetching gallery images:", error);
+      toast.error("Erreur lors du chargement de la galerie.");
+      setGalleryImages([]);
+    } else {
+      setGalleryImages(data || []);
+    }
+    setLoading(false);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Êtes-vous sûr de vouloir supprimer cette image de votre galerie ?")) return;
+
+    const { error } = await supabase
+      .from('generated_images')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', session?.user?.id);
+
+    if (error) {
+      console.error("Error deleting image from gallery:", error);
+      toast.error("Erreur lors de la suppression de l'image.");
+    } else {
+      toast.success("Image supprimée de la galerie.");
+      fetchGalleryImages(); // Refresh the list
+      if (selectedImage?.id === id) {
+        setSelectedImage(null);
+      }
     }
   };
 
@@ -45,7 +85,7 @@ const Gallery = () => {
     toast.info("Lien de l'image copié dans le presse-papiers !");
   };
 
-  const containerVariants: Variants = { // Explicitly type containerVariants
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -55,7 +95,7 @@ const Gallery = () => {
     },
   };
 
-  const itemVariants: Variants = { // Explicitly type itemVariants
+  const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
@@ -66,6 +106,33 @@ const Gallery = () => {
       },
     },
   };
+
+  if (!session) {
+    return (
+      <motion.div
+        className="min-h-[calc(100vh-16rem)] py-12 text-center text-vf-gray"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        <motion.h1
+          className="text-4xl sm:text-5xl font-bold text-vf-blue text-center mb-10"
+          variants={itemVariants}
+        >
+          Ta Galerie de Créations
+        </motion.h1>
+        <motion.p
+          className="text-base sm:text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
+          variants={itemVariants}
+        >
+          Veuillez vous connecter pour voir et gérer vos créations.
+        </motion.p>
+        <VisuaForgeButton onClick={() => window.location.href = '/login'} className="mt-4">
+          Se connecter
+        </VisuaForgeButton>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
@@ -87,7 +154,9 @@ const Gallery = () => {
         Retrouve toutes tes images générées et modifiées ici.
       </motion.p>
 
-      {galleryImages.length > 0 ? (
+      {loading ? (
+        <div className="flex justify-center items-center h-60 text-vf-gray text-xl">Chargement de la galerie...</div>
+      ) : galleryImages.length > 0 ? (
         <motion.div
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
           variants={containerVariants}
@@ -102,12 +171,12 @@ const Gallery = () => {
               onClick={() => setSelectedImage(image)}
             >
               <img
-                src={image.src}
-                alt={image.title}
+                src={image.image_url}
+                alt={image.prompt || `Image ${image.mode}`}
                 className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-vf-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                <p className="text-sm sm:text-lg text-white font-medium">{image.title}</p>
+                <p className="text-sm sm:text-lg text-white font-medium">{image.prompt || `Image ${image.mode}`}</p>
               </div>
             </motion.div>
           ))}
@@ -144,13 +213,14 @@ const Gallery = () => {
             >
               <X className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
-            <h2 className="text-2xl sm:text-3xl font-bold text-vf-blue mb-4">{selectedImage.title}</h2>
-            <img src={selectedImage.src} alt={selectedImage.title} className="w-full h-auto rounded-lg mb-4" />
+            <h2 className="text-2xl sm:text-3xl font-bold text-vf-blue mb-4">{selectedImage.prompt || `Image ${selectedImage.mode}`}</h2>
+            <p className="text-sm text-vf-gray mb-4">Créé le: {format(new Date(selectedImage.created_at), 'dd MMMM yyyy HH:mm', { locale: fr })}</p>
+            <img src={selectedImage.image_url} alt={selectedImage.prompt || `Image ${selectedImage.mode}`} className="w-full h-auto rounded-lg mb-4" />
             <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4">
-              <VisuaForgeButton size="sm" className="text-sm sm:text-base" onClick={() => handleDownload(selectedImage.src, selectedImage.title)}>
+              <VisuaForgeButton size="sm" className="text-sm sm:text-base" onClick={() => handleDownload(selectedImage.image_url, selectedImage.prompt || `Image ${selectedImage.mode}`)}>
                 <Download className="mr-2 h-4 w-4" /> Télécharger
               </VisuaForgeButton>
-              <VisuaForgeButton variant="outline" size="sm" className="text-sm sm:text-base" onClick={() => handleShare(selectedImage.src)}>
+              <VisuaForgeButton variant="outline" size="sm" className="text-sm sm:text-base" onClick={() => handleShare(selectedImage.image_url)}>
                 <Share2 className="mr-2 h-4 w-4" /> Partager
               </VisuaForgeButton>
               <VisuaForgeButton variant="destructive" size="sm" className="text-sm sm:text-base" onClick={() => handleDelete(selectedImage.id)}>

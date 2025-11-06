@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale'; // Import French locale for date formatting
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'; // Import Select components
 
 interface GeneratedImage {
   id: string;
@@ -25,6 +26,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
   const [loadingImages, setLoadingImages] = useState(true);
+  const [filterMode, setFilterMode] = useState<'all' | 'generate' | 'edit'>('all'); // New state for filter
 
   useEffect(() => {
     if (!session) {
@@ -32,15 +34,21 @@ const Dashboard = () => {
     } else {
       fetchGeneratedImages();
     }
-  }, [session, navigate]);
+  }, [session, navigate, filterMode]); // Re-fetch when filterMode changes
 
   const fetchGeneratedImages = async () => {
     setLoadingImages(true);
-    const { data, error } = await supabase
+    let query = supabase
       .from('generated_images')
       .select('*')
       .eq('user_id', session?.user?.id)
       .order('created_at', { ascending: false });
+
+    if (filterMode !== 'all') {
+      query = query.eq('mode', filterMode);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       console.error("Error fetching generated images:", error);
@@ -161,6 +169,18 @@ const Dashboard = () => {
           <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-bold text-vf-purple mb-6 flex items-center">
             <Image className="mr-3 h-6 w-6" /> Historique de générations
           </h2>
+          <div className="mb-6 flex justify-end">
+            <Select value={filterMode} onValueChange={(value: 'all' | 'generate' | 'edit') => setFilterMode(value)}>
+              <SelectTrigger className="w-[180px] bg-vf-gray/30 border-vf-gray text-white">
+                <SelectValue placeholder="Filtrer par type" />
+              </SelectTrigger>
+              <SelectContent className="bg-vf-dark border-vf-gray text-white">
+                <SelectItem value="all">Tous les types</SelectItem>
+                <SelectItem value="generate">Générations</SelectItem>
+                <SelectItem value="edit">Modifications</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           {loadingImages ? (
             <div className="flex justify-center items-center h-40 text-vf-gray">Chargement des images...</div>
           ) : generatedImages.length === 0 ? (
