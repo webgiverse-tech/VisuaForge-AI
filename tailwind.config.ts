@@ -66,7 +66,7 @@ export default {
         'vf-blue': '#00BFFF', // Electric Blue
         'vf-purple': '#8A2BE2', // Neon Violet
         'vf-dark': '#0A0A0A', // Deep Black
-        'vf-gray': '#2C2C2C', // Dark Gray for subtle elements
+        'vf-gray': '#A0A0A0', // Lighter Dark Gray for subtle elements (changed from #2C2C2C)
         'vf-glow-blue': 'rgba(0, 191, 255, 0.6)',
         'vf-glow-purple': 'rgba(138, 43, 226, 0.6)',
       },
