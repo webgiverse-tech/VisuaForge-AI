@@ -16,11 +16,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { VisuaForgeButton } from './VisuaForgeButton';
 import { useSupabase } from './SessionContextProvider';
+import { useIsMobile } from '@/hooks/use-mobile'; // Import useIsMobile hook
 
 const Navbar = () => {
   const { session, supabase } = useSupabase();
   const navigate = useNavigate();
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
+  const isMobile = useIsMobile(); // Use the hook to determine if it's a mobile screen
 
   const navItems = [
     {
@@ -116,16 +118,17 @@ const Navbar = () => {
         <div className="lg:hidden flex items-center">
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
-              {/* Tablet Menu Button (visible on md screens, hidden on sm and lg) */}
-              <VisuaForgeButton variant="secondary" className="hidden md:flex text-base px-4 py-2">
-                <Menu className="h-5 w-5 mr-2" /> Menu
-                <span className="sr-only">Toggle navigation menu</span>
-              </VisuaForgeButton>
-              {/* Mobile Menu Button (visible on sm screens, hidden on md and lg) */}
-              <VisuaForgeButton variant="outline" size="icon" className="flex md:hidden hover:bg-vf-gray/20 border-vf-blue text-vf-blue">
-                <Menu className="h-6 w-6" />
-                <span className="sr-only">Toggle navigation menu</span>
-              </VisuaForgeButton>
+              {isMobile ? ( // Mobile button for screens < 768px
+                <VisuaForgeButton variant="outline" size="icon" className="hover:bg-vf-gray/20 border-vf-blue text-vf-blue">
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">Toggle navigation menu</span>
+                </VisuaForgeButton>
+              ) : ( // Tablet button for screens >= 768px (but hidden on lg by parent div)
+                <VisuaForgeButton variant="secondary" className="text-base px-4 py-2">
+                  <Menu className="h-5 w-5 mr-2" /> Menu
+                  <span className="sr-only">Toggle navigation menu</span>
+                </VisuaForgeButton>
+              )}
             </SheetTrigger>
             <SheetContent side="right" className="w-[250px] sm:w-[300px] bg-vf-dark border-vf-gray p-6">
               <div className="flex flex-col space-y-4">
