@@ -102,29 +102,29 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative z-10 mb-20">
         <motion.h1
-          className="text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-vf-blue to-vf-purple mb-6 leading-tight animate-pulse-light"
+          className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-vf-blue to-vf-purple mb-6 leading-tight animate-pulse-light"
           variants={itemVariants}
         >
           Transforme ton imagination en image. En un clic. 🚀
         </motion.h1>
         <motion.p
-          className="text-xl text-vf-gray mb-10 max-w-3xl mx-auto"
+          className="text-base sm:text-lg md:text-xl text-vf-gray mb-10 max-w-3xl mx-auto"
           variants={itemVariants}
         >
           Laisse ton imagination peindre le futur. Crée, modifie, réinvente — sans limite.
         </motion.p>
         <motion.div
-          className="flex justify-center space-x-6"
+          className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6"
           variants={itemVariants}
         >
           <Link to="/generate">
-            <VisuaForgeButton size="lg" className="text-lg px-8 py-4">
-              <Image className="mr-2 h-5 w-5" /> Créer une image maintenant
+            <VisuaForgeButton size="sm" className="text-base sm:text-lg px-6 py-3 sm:px-8 sm:py-4">
+              <Image className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Créer une image maintenant
             </VisuaForgeButton>
           </Link>
           <Link to="/premium">
-            <VisuaForgeButton variant="outline" size="lg" className="text-lg px-8 py-4">
-              <Sparkles className="mr-2 h-5 w-5" /> Essayer gratuitement
+            <VisuaForgeButton variant="outline" size="sm" className="text-base sm:text-lg px-6 py-3 sm:px-8 sm:py-4">
+              <Sparkles className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Essayer gratuitement
             </VisuaForgeButton>
           </Link>
         </motion.div>
@@ -133,7 +133,7 @@ const Index = () => {
       {/* What You Can Do Section */}
       <section className="w-full max-w-6xl relative z-10 mb-20">
         <motion.h2
-          className="text-4xl font-bold text-vf-blue mb-12"
+          className="text-3xl sm:text-4xl font-bold text-vf-blue mb-12"
           variants={itemVariants}
         >
           Ce que tu peux faire avec VisuaForge
@@ -149,9 +149,9 @@ const Index = () => {
               variants={itemVariants}
               whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(138, 43, 226, 0.4)" }}
             >
-              <card.icon className="w-12 h-12 text-vf-purple mb-4" />
-              <h3 className="text-2xl font-semibold text-white mb-2">{card.title}</h3>
-              <p className="text-vf-gray">{card.description}</p>
+              <card.icon className="w-10 h-10 sm:w-12 sm:h-12 text-vf-purple mb-4" />
+              <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2">{card.title}</h3>
+              <p className="text-sm sm:text-base text-vf-gray">{card.description}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -160,13 +160,13 @@ const Index = () => {
       {/* New Section: How It Works (Simplified) */}
       <section className="w-full max-w-6xl relative z-10 mb-20">
         <motion.h2
-          className="text-4xl font-bold text-vf-blue mb-12"
+          className="text-3xl sm:text-4xl font-bold text-vf-blue mb-12"
           variants={itemVariants}
         >
           Comment ça marche ?
         </motion.h2>
         <motion.p
-          className="text-xl text-vf-gray mb-10 max-w-3xl mx-auto"
+          className="text-base sm:text-xl text-vf-gray mb-10 max-w-3xl mx-auto"
           variants={itemVariants}
         >
           Créez des images époustouflantes en quelques étapes simples.
@@ -182,16 +182,16 @@ const Index = () => {
               variants={itemVariants}
               whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(0, 191, 255, 0.4)" }}
             >
-              <step.icon className="w-12 h-12 text-vf-blue mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">{step.title}</h3>
-              <p className="text-vf-gray text-sm">{step.description}</p>
+              <step.icon className="w-10 h-10 sm:w-12 sm:h-12 text-vf-blue mb-4" />
+              <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">{step.title}</h3>
+              <p className="text-xs sm:text-sm text-vf-gray">{step.description}</p>
             </motion.div>
           ))}
         </motion.div>
         <motion.div variants={itemVariants} className="mt-12">
           <Link to="/how-it-works">
-            <VisuaForgeButton variant="outline" size="lg" className="text-lg px-8 py-4">
-              <BookOpen className="mr-2 h-5 w-5" /> Voir le guide complet
+            <VisuaForgeButton variant="outline" size="sm" className="text-base sm:text-lg px-6 py-3 sm:px-8 sm:py-4">
+              <BookOpen className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Voir le guide complet
             </VisuaForgeButton>
           </Link>
         </motion.div>
@@ -200,7 +200,7 @@ const Index = () => {
       {/* Mock Gallery Section */}
       <section className="w-full max-w-6xl relative z-10 mb-20">
         <motion.h2
-          className="text-4xl font-bold text-vf-blue mb-10"
+          className="text-3xl sm:text-4xl font-bold text-vf-blue mb-10"
           variants={itemVariants}
         >
           Découvre les dernières créations
@@ -223,7 +223,7 @@ const Index = () => {
                 className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-vf-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                <p className="text-sm text-white font-medium">Image {index + 1}</p>
+                <p className="text-xs sm:text-sm text-white font-medium">Image {index + 1}</p>
               </div>
             </motion.div>
           ))}
@@ -233,7 +233,7 @@ const Index = () => {
       {/* New Section: Testimonials */}
       <section className="w-full max-w-6xl relative z-10 mb-20">
         <motion.h2
-          className="text-4xl font-bold text-vf-blue mb-12"
+          className="text-3xl sm:text-4xl font-bold text-vf-blue mb-12"
           variants={itemVariants}
         >
           Ce que nos utilisateurs disent
@@ -249,9 +249,9 @@ const Index = () => {
               variants={itemVariants}
               whileHover={{ scale: 1.03, boxShadow: "0 0 20px rgba(138, 43, 226, 0.4)" }}
             >
-              <Quote className="w-12 h-12 text-vf-purple mb-4" />
-              <p className="text-lg text-white italic mb-4">"{testimonial.quote}"</p>
-              <p className="text-vf-gray font-semibold">- {testimonial.author}</p>
+              <Quote className="w-10 h-10 sm:w-12 sm:h-12 text-vf-purple mb-4" />
+              <p className="text-base sm:text-lg text-white italic mb-4">"{testimonial.quote}"</p>
+              <p className="text-sm sm:text-base text-vf-gray font-semibold">- {testimonial.author}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -259,15 +259,15 @@ const Index = () => {
 
       {/* Final CTA Section */}
       <motion.section
-        className="w-full max-w-4xl relative z-10 bg-gradient-to-r from-vf-blue/20 to-vf-purple/20 p-10 rounded-2xl shadow-3xl border border-vf-blue animate-glow-light"
+        className="w-full max-w-4xl relative z-10 bg-gradient-to-r from-vf-blue/20 to-vf-purple/20 p-8 sm:p-10 rounded-2xl shadow-3xl border border-vf-blue animate-glow-light"
         variants={itemVariants}
       >
-        <h2 className="text-4xl font-bold text-white mb-4">Prêt à créer ?</h2>
-        <p className="text-xl text-vf-gray mb-8">
+        <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Prêt à créer ?</h2>
+        <p className="text-base sm:text-xl text-vf-gray mb-8">
           Rejoins des milliers de créateurs et donne vie à tes visions.
         </p>
         <Link to="/generate">
-          <VisuaForgeButton size="lg" className="text-xl px-10 py-5 animate-pulse-light">
+          <VisuaForgeButton size="sm" className="text-lg sm:text-xl px-8 py-4 sm:px-10 sm:py-5 animate-pulse-light">
             Commencer l'aventure IA
           </VisuaForgeButton>
         </Link>

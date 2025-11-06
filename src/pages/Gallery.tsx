@@ -75,13 +75,13 @@ const Gallery = () => {
       variants={containerVariants}
     >
       <motion.h1
-        className="text-5xl font-bold text-vf-blue text-center mb-10"
+        className="text-4xl sm:text-5xl font-bold text-vf-blue text-center mb-10"
         variants={itemVariants}
       >
         Ta Galerie de Créations
       </motion.h1>
       <motion.p
-        className="text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
+        className="text-base sm:text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
         variants={itemVariants}
       >
         Retrouve toutes tes images générées et modifiées ici.
@@ -107,7 +107,7 @@ const Gallery = () => {
                 className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-vf-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                <p className="text-lg text-white font-medium">{image.title}</p>
+                <p className="text-sm sm:text-lg text-white font-medium">{image.title}</p>
               </div>
             </motion.div>
           ))}
@@ -117,9 +117,9 @@ const Gallery = () => {
           className="text-center text-vf-gray mt-20"
           variants={itemVariants}
         >
-          <Image className="w-24 h-24 mx-auto mb-4 text-vf-purple" />
-          <p className="text-2xl">Aucune création pour le moment.</p>
-          <p className="text-lg">Commence à générer ou modifier des images pour les voir apparaître ici !</p>
+          <Image className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 text-vf-purple" />
+          <p className="text-xl sm:text-2xl">Aucune création pour le moment.</p>
+          <p className="text-base sm:text-lg">Commence à générer ou modifier des images pour les voir apparaître ici !</p>
         </motion.div>
       )}
 
@@ -142,19 +142,19 @@ const Gallery = () => {
               className="absolute top-4 right-4 text-vf-gray hover:text-vf-blue transition-colors"
               onClick={() => setSelectedImage(null)}
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
-            <h2 className="text-3xl font-bold text-vf-blue mb-4">{selectedImage.title}</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-vf-blue mb-4">{selectedImage.title}</h2>
             <img src={selectedImage.src} alt={selectedImage.title} className="w-full h-auto rounded-lg mb-4" />
-            <div className="flex justify-center space-x-4">
-              <VisuaForgeButton onClick={() => handleDownload(selectedImage.src, selectedImage.title)}>
-                <Download className="mr-2 h-5 w-5" /> Télécharger
+            <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4">
+              <VisuaForgeButton size="sm" className="text-sm sm:text-base" onClick={() => handleDownload(selectedImage.src, selectedImage.title)}>
+                <Download className="mr-2 h-4 w-4" /> Télécharger
               </VisuaForgeButton>
-              <VisuaForgeButton variant="outline" onClick={() => handleShare(selectedImage.src)}>
-                <Share2 className="mr-2 h-5 w-5" /> Partager
+              <VisuaForgeButton variant="outline" size="sm" className="text-sm sm:text-base" onClick={() => handleShare(selectedImage.src)}>
+                <Share2 className="mr-2 h-4 w-4" /> Partager
               </VisuaForgeButton>
-              <VisuaForgeButton variant="destructive" onClick={() => handleDelete(selectedImage.id)}>
-                <Trash2 className="mr-2 h-5 w-5" /> Supprimer
+              <VisuaForgeButton variant="destructive" size="sm" className="text-sm sm:text-base" onClick={() => handleDelete(selectedImage.id)}>
+                <Trash2 className="mr-2 h-4 w-4" /> Supprimer
               </VisuaForgeButton>
             </div>
           </motion.div>

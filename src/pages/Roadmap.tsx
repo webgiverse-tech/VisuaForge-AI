@@ -65,13 +65,13 @@ const Roadmap = () => {
       variants={containerVariants}
     >
       <motion.h1
-        className="text-5xl font-bold text-vf-blue text-center mb-10"
+        className="text-4xl sm:text-5xl font-bold text-vf-blue text-center mb-10"
         variants={itemVariants}
       >
         Notre Feuille de Route
       </motion.h1>
       <motion.p
-        className="text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
+        className="text-base sm:text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
         variants={itemVariants}
       >
         Découvrez les fonctionnalités que nous développons pour l'avenir de VisuaForge AI.
@@ -84,16 +84,16 @@ const Roadmap = () => {
             className="bg-vf-dark/60 backdrop-blur-md p-8 rounded-xl shadow-2xl border border-vf-gray"
             variants={itemVariants}
           >
-            <h2 className="text-3xl font-bold text-vf-purple mb-6 flex items-center">
-              <Rocket className="mr-3 h-7 w-7" /> {phase.phase}
+            <h2 className="text-2xl sm:text-3xl font-bold text-vf-purple mb-6 flex items-center">
+              <Rocket className="mr-3 h-6 w-6 sm:h-7 sm:w-7" /> {phase.phase}
             </h2>
             <ul className="space-y-4">
               {phase.features.map((feature, fIndex) => (
-                <li key={fIndex} className="flex items-center text-lg text-white">
+                <li key={fIndex} className="flex items-center text-base sm:text-lg text-white">
                   {feature.completed ? (
-                    <CheckCircle className="w-6 h-6 text-vf-blue mr-3 flex-shrink-0" />
+                    <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-vf-blue mr-3 flex-shrink-0" />
                   ) : (
-                    <feature.icon className="w-6 h-6 text-vf-gray mr-3 flex-shrink-0" />
+                    <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 text-vf-gray mr-3 flex-shrink-0" />
                   )}
                   <span className={!feature.completed ? "text-vf-gray" : ""}>{feature.text}</span>
                 </li>

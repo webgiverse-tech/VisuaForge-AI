@@ -62,13 +62,13 @@ const Contact = () => {
       variants={containerVariants}
     >
       <motion.h1
-        className="text-5xl font-bold text-vf-blue text-center mb-10"
+        className="text-4xl sm:text-5xl font-bold text-vf-blue text-center mb-10"
         variants={itemVariants}
       >
         Contacte-nous
       </motion.h1>
       <motion.p
-        className="text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
+        className="text-base sm:text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
         variants={itemVariants}
       >
         Une question, une suggestion ou besoin d'aide ? Notre équipe est là pour toi.
@@ -77,55 +77,55 @@ const Contact = () => {
       <div className="max-w-3xl mx-auto bg-vf-dark/60 backdrop-blur-md p-8 rounded-xl shadow-2xl border border-vf-gray">
         <motion.form onSubmit={handleSubmit} className="space-y-6" variants={containerVariants}>
           <motion.div variants={itemVariants}>
-            <Label htmlFor="name" className="text-lg text-vf-blue mb-2 block">Nom</Label>
+            <Label htmlFor="name" className="text-base sm:text-lg text-vf-blue mb-2 block">Nom</Label>
             <Input
               id="name"
               type="text"
               placeholder="Ton nom"
               value={formData.name}
               onChange={handleChange}
-              className="bg-vf-gray/30 border-vf-gray text-white placeholder:text-vf-gray focus:border-vf-blue focus:ring-vf-blue"
+              className="bg-vf-gray/30 border-vf-gray text-sm sm:text-base text-white placeholder:text-vf-gray focus:border-vf-blue focus:ring-vf-blue"
             />
           </motion.div>
           <motion.div variants={itemVariants}>
-            <Label htmlFor="email" className="text-lg text-vf-blue mb-2 block">Email</Label>
+            <Label htmlFor="email" className="text-base sm:text-lg text-vf-blue mb-2 block">Email</Label>
             <Input
               id="email"
               type="email"
               placeholder="ton.email@exemple.com"
               value={formData.email}
               onChange={handleChange}
-              className="bg-vf-gray/30 border-vf-gray text-white placeholder:text-vf-gray focus:border-vf-blue focus:ring-vf-blue"
+              className="bg-vf-gray/30 border-vf-gray text-sm sm:text-base text-white placeholder:text-vf-gray focus:border-vf-blue focus:ring-vf-blue"
             />
           </motion.div>
           <motion.div variants={itemVariants}>
-            <Label htmlFor="message" className="text-lg text-vf-blue mb-2 block">Message</Label>
+            <Label htmlFor="message" className="text-base sm:text-lg text-vf-blue mb-2 block">Message</Label>
             <Textarea
               id="message"
               placeholder="Décris ton problème ou ta suggestion..."
               value={formData.message}
               onChange={handleChange}
-              className="bg-vf-gray/30 border-vf-gray text-white placeholder:text-vf-gray focus:border-vf-blue focus:ring-vf-blue h-32"
+              className="bg-vf-gray/30 border-vf-gray text-sm sm:text-base text-white placeholder:text-vf-gray focus:border-vf-blue focus:ring-vf-blue h-32"
             />
           </motion.div>
           <motion.div variants={itemVariants}>
-            <VisuaForgeButton type="submit" className="w-full text-lg py-3">
-              <Mail className="mr-2 h-5 w-5" /> Envoyer le message
+            <VisuaForgeButton type="submit" size="default" className="w-full text-base sm:text-lg py-3 sm:py-4">
+              <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Envoyer le message
             </VisuaForgeButton>
           </motion.div>
         </motion.form>
 
         <motion.div className="mt-10 text-center" variants={itemVariants}>
-          <h2 className="text-3xl font-bold text-vf-purple mb-6">Ou rejoins-nous sur :</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-vf-purple mb-6">Ou rejoins-nous sur :</h2>
           <div className="flex justify-center space-x-6">
             <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="text-vf-gray hover:text-vf-blue transition-colors duration-300">
-              <MessageSquare size={32} />
+              <MessageSquare size={28} className="sm:w-8 sm:h-8" />
             </a>
             <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-vf-gray hover:text-vf-blue transition-colors duration-300">
-              <Twitter size={32} />
+              <Twitter size={28} className="sm:w-8 sm:h-8" />
             </a>
             <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-vf-gray hover:text-vf-blue transition-colors duration-300">
-              <Github size={32} />
+              <Github size={28} className="sm:w-8 sm:h-8" />
             </a>
           </div>
         </motion.div>

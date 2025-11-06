@@ -89,13 +89,13 @@ const Premium = () => {
       variants={containerVariants}
     >
       <motion.h1
-        className="text-5xl font-bold text-vf-blue text-center mb-10"
+        className="text-4xl sm:text-5xl font-bold text-vf-blue text-center mb-10"
         variants={cardVariants}
       >
         Débloque ton potentiel créatif
       </motion.h1>
       <motion.p
-        className="text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
+        className="text-base sm:text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
         variants={cardVariants}
       >
         Passe au niveau supérieur avec nos plans Premium et accède à des fonctionnalités exclusives pour des créations sans limites.
@@ -113,25 +113,25 @@ const Premium = () => {
             whileHover={{ scale: 1.03, boxShadow: "0 0 25px rgba(0, 191, 255, 0.3)" }}
           >
             {plan.popular && (
-              <div className="absolute -top-4 right-4 bg-vf-purple text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-glow">
+              <div className="absolute -top-4 right-4 bg-vf-purple text-white text-xs sm:text-sm font-bold px-3 py-1 rounded-full shadow-lg animate-glow">
                 Populaire
               </div>
             )}
-            <h2 className="text-3xl font-bold text-vf-blue mb-4">{plan.name}</h2>
-            <p className="text-5xl font-extrabold text-vf-purple mb-6">{plan.price}</p>
-            <ul className="text-lg text-white space-y-3 mb-8 text-left w-full">
+            <h2 className="text-2xl sm:text-3xl font-bold text-vf-blue mb-4">{plan.name}</h2>
+            <p className="text-4xl sm:text-5xl font-extrabold text-vf-purple mb-6">{plan.price}</p>
+            <ul className="text-sm sm:text-lg text-white space-y-3 mb-8 text-left w-full">
               {plan.features.map((feature, i) => (
                 <li key={i} className="flex items-center">
                   {feature.available ? (
-                    <CheckCircle className="w-5 h-5 text-vf-blue mr-3 flex-shrink-0" />
+                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-vf-blue mr-3 flex-shrink-0" />
                   ) : (
-                    <X className="w-5 h-5 text-vf-gray mr-3 flex-shrink-0" />
+                    <X className="w-4 h-4 sm:w-5 sm:h-5 text-vf-gray mr-3 flex-shrink-0" />
                   )}
                   <span className={!feature.available ? "text-vf-gray line-through" : ""}>{feature.text}</span>
                 </li>
               ))}
             </ul>
-            <VisuaForgeButton variant={plan.variant as any} className="w-full text-lg py-3 mt-auto">
+            <VisuaForgeButton variant={plan.variant as any} size="default" className="w-full text-base sm:text-lg py-3 sm:py-4 mt-auto">
               {plan.cta}
             </VisuaForgeButton>
           </motion.div>

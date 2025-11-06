@@ -57,13 +57,13 @@ const HowItWorks = () => {
       variants={containerVariants}
     >
       <motion.h1
-        className="text-5xl font-bold text-vf-blue text-center mb-10"
+        className="text-4xl sm:text-5xl font-bold text-vf-blue text-center mb-10"
         variants={itemVariants}
       >
         Comment Utiliser VisuaForge AI
       </motion.h1>
       <motion.p
-        className="text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
+        className="text-base sm:text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
         variants={itemVariants}
       >
         Créer des images époustouflantes n'a jamais été aussi simple. Suis ces étapes pour commencer ton aventure créative.
@@ -77,12 +77,12 @@ const HowItWorks = () => {
             variants={itemVariants}
             whileHover={{ scale: 1.03, boxShadow: "0 0 25px rgba(138, 43, 226, 0.4)" }}
           >
-            <div className="relative w-20 h-20 flex items-center justify-center rounded-full bg-vf-purple/20 border-2 border-vf-purple mb-6">
-              <span className="absolute text-4xl font-bold text-vf-purple -top-4 -left-4 opacity-30">{index + 1}</span>
-              <step.icon className="w-10 h-10 text-vf-blue" />
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center rounded-full bg-vf-purple/20 border-2 border-vf-purple mb-6">
+              <span className="absolute text-3xl sm:text-4xl font-bold text-vf-purple -top-4 -left-4 opacity-30">{index + 1}</span>
+              <step.icon className="w-8 h-8 sm:w-10 sm:h-10 text-vf-blue" />
             </div>
-            <h3 className="text-2xl font-semibold text-white mb-2">{step.title}</h3>
-            <p className="text-vf-gray">{step.description}</p>
+            <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2">{step.title}</h3>
+            <p className="text-sm sm:text-base text-vf-gray">{step.description}</p>
           </motion.div>
         ))}
       </div>
@@ -91,12 +91,12 @@ const HowItWorks = () => {
         className="text-center max-w-4xl mx-auto"
         variants={itemVariants}
       >
-        <h2 className="text-4xl font-bold text-vf-blue mb-6">Conseils de Pro</h2>
+        <h2 className="text-3xl sm:text-4xl font-bold text-vf-blue mb-6">Conseils de Pro</h2>
         <div className="bg-vf-dark/60 backdrop-blur-md p-8 rounded-xl shadow-2xl border border-vf-gray">
-          <p className="text-xl text-white mb-4">
+          <p className="text-base sm:text-xl text-white mb-4">
             💡 Essayez des prompts détaillés pour de meilleurs résultats. Incluez des adjectifs, des couleurs, l'éclairage, l'ambiance et des styles spécifiques.
           </p>
-          <p className="text-xl text-white">
+          <p className="text-base sm:text-xl text-white">
             ✨ N'hésitez pas à expérimenter ! L'IA est là pour explorer ta créativité.
           </p>
         </div>
@@ -105,8 +105,8 @@ const HowItWorks = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <a href="#" className="inline-flex items-center text-vf-purple hover:text-vf-blue transition-colors text-xl font-medium">
-            <PlayCircle className="mr-3 h-7 w-7" /> Regarder le tutoriel vidéo
+          <a href="#" className="inline-flex items-center text-vf-purple hover:text-vf-blue transition-colors text-lg sm:text-xl font-medium">
+            <PlayCircle className="mr-3 h-6 w-6 sm:h-7 sm:w-7" /> Regarder le tutoriel vidéo
           </a>
         </motion.div>
       </motion.div>

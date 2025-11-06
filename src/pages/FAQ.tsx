@@ -70,13 +70,13 @@ const FAQ = () => {
       variants={containerVariants}
     >
       <motion.h1
-        className="text-5xl font-bold text-vf-blue text-center mb-10"
+        className="text-4xl sm:text-5xl font-bold text-vf-blue text-center mb-10"
         variants={itemVariants}
       >
         Questions Fréquemment Posées
       </motion.h1>
       <motion.p
-        className="text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
+        className="text-base sm:text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
         variants={itemVariants}
       >
         Trouve rapidement les réponses à tes interrogations sur VisuaForge AI.
@@ -90,10 +90,10 @@ const FAQ = () => {
           {faqItems.map((item, index) => (
             <motion.div key={index} variants={itemVariants}>
               <AccordionItem value={`item-${index}`} className="border-b border-vf-gray">
-                <AccordionTrigger className="text-lg font-semibold text-white hover:text-vf-blue transition-colors">
-                  <HelpCircle className="mr-3 h-5 w-5 text-vf-purple" /> {item.question}
+                <AccordionTrigger className="text-base sm:text-lg font-semibold text-white hover:text-vf-blue transition-colors">
+                  <HelpCircle className="mr-3 h-4 w-4 sm:h-5 sm:w-5 text-vf-purple" /> {item.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-vf-gray text-base pl-8">
+                <AccordionContent className="text-sm sm:text-base text-vf-gray pl-8">
                   {item.answer}
                 </AccordionContent>
               </AccordionItem>

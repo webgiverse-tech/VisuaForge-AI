@@ -73,13 +73,13 @@ const Features = () => {
       variants={containerVariants}
     >
       <motion.h1
-        className="text-5xl font-bold text-vf-blue text-center mb-10"
+        className="text-4xl sm:text-5xl font-bold text-vf-blue text-center mb-10"
         variants={itemVariants}
       >
         Découvre la Puissance de VisuaForge AI
       </motion.h1>
       <motion.p
-        className="text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
+        className="text-base sm:text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
         variants={itemVariants}
       >
         Explore un ensemble de fonctionnalités avancées conçues pour transformer ta vision créative en réalité.
@@ -96,9 +96,9 @@ const Features = () => {
             variants={itemVariants}
             whileHover={{ scale: 1.03, boxShadow: `0 0 25px ${card.color.replace('text-', 'rgba(').replace('blue', '0, 191, 255').replace('purple', '138, 43, 226')}, 0.4)` }}
           >
-            <card.icon className={`w-16 h-16 ${card.color} mb-4`} />
-            <h3 className="text-2xl font-semibold text-white mb-2">{card.title}</h3>
-            <p className="text-vf-gray">{card.description}</p>
+            <card.icon className={`w-12 h-12 sm:w-16 sm:h-16 ${card.color} mb-4`} />
+            <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2">{card.title}</h3>
+            <p className="text-sm sm:text-base text-vf-gray">{card.description}</p>
           </motion.div>
         ))}
       </motion.div>
