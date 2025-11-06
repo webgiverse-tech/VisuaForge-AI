@@ -69,19 +69,19 @@ const Gallery = () => {
 
   return (
     <motion.div
-      className="min-h-[calc(100vh-16rem)] py-12"
+      className="min-h-[calc(100vh-16rem)] py-12 px-4 sm:px-6 md:px-8"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
       <motion.h1
-        className="text-5xl font-bold text-vf-blue text-center mb-10"
+        className="text-h1 font-bold text-vf-blue text-center mb-10"
         variants={itemVariants}
       >
         Ta Galerie de Créations
       </motion.h1>
       <motion.p
-        className="text-xl text-vf-gray text-center mb-12 max-w-3xl mx-auto"
+        className="text-p text-vf-gray text-center mb-12 max-w-[95%] sm:max-w-[80%] md:max-w-[70%] mx-auto"
         variants={itemVariants}
       >
         Retrouve toutes tes images générées et modifiées ici.
@@ -97,7 +97,7 @@ const Gallery = () => {
               key={image.id}
               className="relative group overflow-hidden rounded-lg shadow-xl border border-vf-gray hover:border-vf-purple transition-all duration-300 transform hover:scale-105 cursor-pointer"
               variants={itemVariants}
-              whileHover={{ rotateY: 5, rotateX: 5, scale: 1.05 }}
+              whileHover={{ scale: 1.03, boxShadow: "0 0 25px rgba(138, 43, 226, 0.4)" }}
               transition={{ duration: 0.3 }}
               onClick={() => setSelectedImage(image)}
             >
@@ -107,7 +107,7 @@ const Gallery = () => {
                 className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-vf-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                <p className="text-lg text-white font-medium">{image.title}</p>
+                <p className="text-p text-white font-medium">{image.title}</p>
               </div>
             </motion.div>
           ))}
@@ -118,8 +118,8 @@ const Gallery = () => {
           variants={itemVariants}
         >
           <Image className="w-24 h-24 mx-auto mb-4 text-vf-purple" />
-          <p className="text-2xl">Aucune création pour le moment.</p>
-          <p className="text-lg">Commence à générer ou modifier des images pour les voir apparaître ici !</p>
+          <p className="text-h2">Aucune création pour le moment.</p>
+          <p className="text-p">Commence à générer ou modifier des images pour les voir apparaître ici !</p>
         </motion.div>
       )}
 
@@ -132,7 +132,7 @@ const Gallery = () => {
           onClick={() => setSelectedImage(null)}
         >
           <motion.div
-            className="relative bg-vf-dark/95 border border-vf-blue rounded-lg shadow-3xl p-6 max-w-4xl w-full"
+            className="relative bg-vf-dark/95 border border-vf-blue rounded-lg shadow-3xl p-6 max-w-[95%] sm:max-w-xl lg:max-w-4xl w-full"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
@@ -144,16 +144,16 @@ const Gallery = () => {
             >
               <X className="w-6 h-6" />
             </button>
-            <h2 className="text-3xl font-bold text-vf-blue mb-4">{selectedImage.title}</h2>
+            <h2 className="text-h2 font-bold text-vf-blue mb-4">{selectedImage.title}</h2>
             <img src={selectedImage.src} alt={selectedImage.title} className="w-full h-auto rounded-lg mb-4" />
-            <div className="flex justify-center space-x-4">
-              <VisuaForgeButton onClick={() => handleDownload(selectedImage.src, selectedImage.title)}>
+            <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4">
+              <VisuaForgeButton onClick={() => handleDownload(selectedImage.src, selectedImage.title)} className="text-button-text">
                 <Download className="mr-2 h-5 w-5" /> Télécharger
               </VisuaForgeButton>
-              <VisuaForgeButton variant="outline" onClick={() => handleShare(selectedImage.src)}>
+              <VisuaForgeButton variant="outline" onClick={() => handleShare(selectedImage.src)} className="text-button-text">
                 <Share2 className="mr-2 h-5 w-5" /> Partager
               </VisuaForgeButton>
-              <VisuaForgeButton variant="destructive" onClick={() => handleDelete(selectedImage.id)}>
+              <VisuaForgeButton variant="destructive" onClick={() => handleDelete(selectedImage.id)} className="text-button-text">
                 <Trash2 className="mr-2 h-5 w-5" /> Supprimer
               </VisuaForgeButton>
             </div>

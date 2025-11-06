@@ -10,6 +10,13 @@ export default {
   ],
   prefix: "",
   theme: {
+    screens: { // Updated breakpoints
+      sm: '480px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px',
+    },
     container: {
       center: true,
       padding: "2rem",
@@ -18,6 +25,12 @@ export default {
       },
     },
     extend: {
+      fontSize: { // Responsive typography using clamp()
+        'h1': 'clamp(1.8rem, 4vw, 4rem)',   // Mobile: 1.8rem, Tablet: ~2.5rem, Desktop: 4rem
+        'h2': 'clamp(1.4rem, 3vw, 3.2rem)', // Mobile: 1.4rem, Tablet: ~2rem, Desktop: 3.2rem
+        'p': 'clamp(0.9rem, 2vw, 1.3rem)',  // Mobile: 0.9rem, Tablet: ~1.1rem, Desktop: 1.3rem
+        'button-text': 'clamp(0.8rem, 2vw, 1.2rem)', // Mobile: 0.8rem, Tablet: ~1rem, Desktop: 1.2rem
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -66,9 +79,9 @@ export default {
         'vf-blue': '#00BFFF', // Electric Blue
         'vf-purple': '#8A2BE2', // Neon Violet
         'vf-dark': '#0A0A0A', // Deep Black
-        'vf-gray': '#A0A0A0', // Lighter Dark Gray for subtle elements (changed from #2C2C2C)
-        'vf-glow-blue': 'rgba(0, 191, 255, 0.6)',
-        'vf-glow-purple': 'rgba(138, 43, 226, 0.6)',
+        'vf-gray': '#A0A0A0', // Lighter Dark Gray for subtle elements
+        'vf-glow-blue': 'rgba(0, 191, 255, 0.4)', // Slightly reduced intensity for mobile
+        'vf-glow-purple': 'rgba(138, 43, 226, 0.4)', // Slightly reduced intensity for mobile
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -111,6 +124,10 @@ export default {
           "0%, 100%": { boxShadow: "0 0 5px var(--vf-glow-blue), 0 0 10px var(--vf-glow-purple)" },
           "50%": { boxShadow: "0 0 10px var(--vf-glow-purple), 0 0 20px var(--vf-glow-blue)" },
         },
+        "glow-mobile": { // A lighter glow for mobile
+          "0%, 100%": { boxShadow: "0 0 3px var(--vf-glow-blue), 0 0 6px var(--vf-glow-purple)" },
+          "50%": { boxShadow: "0 0 6px var(--vf-glow-purple), 0 0 12px var(--vf-glow-blue)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -119,6 +136,7 @@ export default {
         "scanner-pulse": "scanner-pulse 2s infinite ease-in-out",
         "scanner-line": "scanner-line 1.5s infinite linear",
         "glow": "glow 2s infinite ease-in-out",
+        "glow-mobile": "glow-mobile 2s infinite ease-in-out",
       },
     },
   },

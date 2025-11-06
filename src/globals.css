@@ -96,7 +96,7 @@
   }
 
   body {
-    @apply bg-vf-dark text-foreground font-sans; /* Use custom dark background */
+    @apply bg-vf-dark text-foreground font-sans text-p; /* Use custom dark background and responsive paragraph text */
   }
 }
 
@@ -117,66 +117,21 @@
   background: radial-gradient(circle at center, var(--vf-glow-blue) 0%, var(--vf-glow-purple) 50%, transparent 70%);
   border-radius: 50%;
   opacity: 0.3;
-  animation: particle-move 30s infinite ease-in-out alternate;
+  animation: particle-move 30s infinite ease-in-out alternate; /* Default for larger screens */
 }
 
-.particle:nth-child(1) {
-  width: 10px; height: 10px;
-  top: 10%; left: 20%;
-  animation-delay: 0s;
-  animation-duration: 25s;
+/* Adjust particle sizes and animation for smaller screens */
+@media (max-width: 767px) { /* For mobile and small tablets */
+  .particle {
+    width: 5px !important;
+    height: 5px !important;
+    opacity: 0.2;
+    animation-duration: 40s !important; /* Slower movement */
+  }
 }
-.particle:nth-child(2) {
-  width: 15px; height: 15px;
-  top: 50%; left: 70%;
-  animation-delay: 5s;
-  animation-duration: 30s;
-}
-.particle:nth-child(3) {
-  width: 8px; height: 8px;
-  top: 80%; left: 40%;
-  animation-delay: 10s;
-  animation-duration: 20s;
-}
-.particle:nth-child(4) {
-  width: 12px; height: 12px;
-  top: 30%; left: 90%;
-  animation-delay: 15s;
-  animation-duration: 35s;
-}
-.particle:nth-child(5) {
-  width: 18px; height: 18px;
-  top: 60%; left: 10%;
-  animation-delay: 20s;
-  animation-duration: 28s;
-}
-.particle:nth-child(6) {
-  width: 10px; height: 10px;
-  top: 20%; left: 50%;
-  animation-delay: 2s;
-  animation-duration: 22s;
-}
-.particle:nth-child(7) {
-  width: 14px; height: 14px;
-  top: 70%; left: 25%;
-  animation-delay: 7s;
-  animation-duration: 33s;
-}
-.particle:nth-child(8) {
-  width: 9px; height: 9px;
-  top: 40%; left: 80%;
-  animation-delay: 12s;
-  animation-duration: 27s;
-}
-.particle:nth-child(9) {
-  width: 16px; height: 16px;
-  top: 90%; left: 60%;
-  animation-delay: 18s;
-  animation-duration: 31s;
-}
-.particle:nth-child(10) {
-  width: 11px; height: 11px;
-  top: 5%; left: 5%;
-  animation-delay: 23s;
-  animation-duration: 29s;
+
+@media (max-width: 479px) { /* For very small mobile screens */
+  .particle {
+    display: none; /* Optionally hide particles on very small screens for performance */
+  }
 }
