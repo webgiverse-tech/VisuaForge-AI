@@ -6,10 +6,12 @@ import ScannerLoader from '@/components/ScannerLoader';
 import { UploadCloud, Sparkles, Download, Share2, GalleryHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import { useSupabase } from '@/components/SessionContextProvider'; // Import useSupabase
 
 const WEBHOOK_URL = 'https://n8n-project-ivc9.onrender.com/webhook-test/image';
 
 const EditImage = () => {
+  const { session, supabase } = useSupabase(); // Use Supabase context
   const [imageFile, setImageFile] = React.useState<File | null>(null);
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
   const [instructions, setInstructions] = React.useState('');
@@ -44,6 +46,10 @@ const EditImage = () => {
       toast.error("Veuillez uploader une image et fournir des instructions.");
       return;
     }
+    if (!session) {
+      toast.error("Veuillez vous connecter pour modifier des images.");
+      return;
+    }
 
     setLoading(true);
     setModifiedImage(null);
@@ -65,10 +71,25 @@ const EditImage = () => {
       }
 
       const data = await response.json();
-      // Assuming the webhook returns an object with an 'imageUrl' field
       if (data && data.imageUrl) {
         setModifiedImage(data.imageUrl);
         toast.success("Image modifiée avec succès !", { id: 'edit-toast' });
+
+        // Save to Supabase generated_images table
+        const { error: dbError } = await supabase
+          .from('generated_images')
+          .insert({
+            user_id: session.user.id,
+            image_url: data.imageUrl,
+            prompt: instructions, // Using instructions as prompt for edited images
+            mode: 'edit',
+          });
+
+        if (dbError) {
+          console.error("Error saving modified image to DB:", dbError);
+          toast.error("Erreur lors de l'enregistrement de l'image modifiée dans la galerie.");
+        }
+
       } else {
         throw new Error("Réponse du webhook invalide: imageUrl manquant.");
       }
@@ -97,10 +118,11 @@ const EditImage = () => {
   };
 
   const handleAddToGallery = (imageSrc: string, title: string) => {
-    const gallery = JSON.parse(localStorage.getItem('visuaforge-gallery') || '[]');
-    gallery.push({ id: Date.now().toString(), src: imageSrc, title: title, date: new Date().toISOString() });
-    localStorage.setItem('visuaforge-gallery', JSON.stringify(gallery));
-    toast.success("Image ajoutée à ta galerie !");
+    // This is now handled by the Supabase insert in handleModify,
+    // but if we wanted a separate "add to gallery" button for *existing* images,
+    // we would re-implement local storage or a separate DB call here.
+    // For now, the image is added to the gallery automatically on modification.
+    toast.info("L'image a déjà été ajoutée à votre galerie.");
   };
 
   return (
@@ -155,7 +177,7 @@ const EditImage = () => {
         </div>
         <VisuaForgeButton
           onClick={handleModify}
-          disabled={loading || !imageFile || !instructions.trim()}
+          disabled={loading || !imageFile || !instructions.trim() || !session}
           size="default"
           className="w-full text-base sm:text-lg py-3 sm:py-4"
         >

@@ -7,10 +7,12 @@ import ScannerLoader from '@/components/ScannerLoader';
 import { Sparkles, Download, Share2, GalleryHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import { useSupabase } from '@/components/SessionContextProvider'; // Import useSupabase
 
 const WEBHOOK_URL = 'https://n8n-project-ivc9.onrender.com/webhook-test/image';
 
 const GenerateImage = () => {
+  const { session, supabase } = useSupabase(); // Use Supabase context
   const [prompt, setPrompt] = React.useState('');
   const [style, setStyle] = React.useState('futuristic');
   const [loading, setLoading] = React.useState(false);
@@ -19,6 +21,10 @@ const GenerateImage = () => {
   const handleGenerate = async () => {
     if (!prompt.trim()) {
       toast.error("Veuillez entrer une idée pour générer l'image.");
+      return;
+    }
+    if (!session) {
+      toast.error("Veuillez vous connecter pour générer des images.");
       return;
     }
 
@@ -44,10 +50,26 @@ const GenerateImage = () => {
       }
 
       const data = await response.json();
-      // Assuming the webhook returns an object with an 'imageUrl' field
       if (data && data.imageUrl) {
         setGeneratedImage(data.imageUrl);
         toast.success("Image générée avec succès !", { id: 'generate-toast' });
+
+        // Save to Supabase generated_images table
+        const { error: dbError } = await supabase
+          .from('generated_images')
+          .insert({
+            user_id: session.user.id,
+            image_url: data.imageUrl,
+            prompt: prompt,
+            style: style,
+            mode: 'generate',
+          });
+
+        if (dbError) {
+          console.error("Error saving generated image to DB:", dbError);
+          toast.error("Erreur lors de l'enregistrement de l'image dans la galerie.");
+        }
+
       } else {
         throw new Error("Réponse du webhook invalide: imageUrl manquant.");
       }
@@ -74,7 +96,6 @@ const GenerateImage = () => {
 
   const handleShare = () => {
     if (generatedImage) {
-      // In a real app, this would open a share dialog or copy link
       navigator.clipboard.writeText(generatedImage);
       toast.info("Lien de l'image copié dans le presse-papiers !");
     }
@@ -82,11 +103,11 @@ const GenerateImage = () => {
 
   const handleAddToGallery = () => {
     if (generatedImage) {
-      // Simulate adding to gallery (e.g., localStorage)
-      const gallery = JSON.parse(localStorage.getItem('visuaforge-gallery') || '[]');
-      gallery.push({ id: Date.now().toString(), src: generatedImage, title: prompt, date: new Date().toISOString() });
-      localStorage.setItem('visuaforge-gallery', JSON.stringify(gallery));
-      toast.success("Image ajoutée à ta galerie !");
+      // This is now handled by the Supabase insert in handleGenerate,
+      // but if we wanted a separate "add to gallery" button for *existing* images,
+      // we would re-implement local storage or a separate DB call here.
+      // For now, the image is added to the gallery automatically on generation.
+      toast.info("L'image a déjà été ajoutée à votre galerie.");
     }
   };
 
@@ -132,7 +153,7 @@ const GenerateImage = () => {
         </div>
         <VisuaForgeButton
           onClick={handleGenerate}
-          disabled={loading || !prompt.trim()}
+          disabled={loading || !prompt.trim() || !session}
           size="default"
           className="w-full text-base sm:text-lg py-3 sm:py-4"
         >
@@ -162,13 +183,13 @@ const GenerateImage = () => {
             <div className="relative inline-block rounded-lg overflow-hidden shadow-2xl border border-vf-blue">
               <img src={generatedImage} alt="Generated AI Image" className="max-w-full h-auto rounded-lg" />
               <div className="absolute inset-0 bg-gradient-to-t from-vf-dark/50 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4 space-x-2">
-                <VisuaForgeButton variant="secondary" size="sm" className="text-xs sm:text-sm">
+                <VisuaForgeButton variant="secondary" size="sm" className="text-xs sm:text-sm" onClick={handleDownload}>
                   <Download className="mr-1 h-3 w-3 sm:h-4 sm:w-4" /> Télécharger
                 </VisuaForgeButton>
-                <VisuaForgeButton variant="outline" size="sm" className="text-xs sm:text-sm">
+                <VisuaForgeButton variant="outline" size="sm" className="text-xs sm:text-sm" onClick={handleShare}>
                   <Share2 className="mr-1 h-3 w-3 sm:h-4 sm:w-4" /> Partager
                 </VisuaForgeButton>
-                <VisuaForgeButton variant="ghost" size="sm" className="text-xs sm:text-sm">
+                <VisuaForgeButton variant="ghost" size="sm" className="text-xs sm:text-sm" onClick={handleAddToGallery}>
                   <GalleryHorizontal className="mr-1 h-3 w-3 sm:h-4 sm:w-4" /> Ajouter à la galerie
                 </VisuaForgeButton>
               </div>

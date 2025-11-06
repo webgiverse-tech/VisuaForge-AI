@@ -20,6 +20,7 @@ import FAQ from "./pages/FAQ";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard"; // Import the new Dashboard component
 import AdminDashboard from "@/pages/Admin/Dashboard.tsx"; // Using alias path
 import { SessionContextProvider } from "./components/SessionContextProvider";
 
@@ -48,6 +49,7 @@ const App = () => (
             <Route path="/faq" element={<Layout><FAQ /></Layout>} />
             <Route path="/login" element={<Layout><Login /></Layout>} />
             <Route path="/register" element={<Layout><Register /></Layout>} />
+            <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} /> {/* New Dashboard route */}
             <Route path="/admin/dashboard" element={<Layout><AdminDashboard /></Layout>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

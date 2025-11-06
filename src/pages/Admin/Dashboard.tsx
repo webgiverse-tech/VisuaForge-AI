@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useSupabase } from '@/components/SessionContextProvider';
 import { useNavigate } from 'react-router-dom';
@@ -8,22 +8,24 @@ import { VisuaForgeButton } from '@/components/VisuaForgeButton';
 import { LogOut, Users, BarChart, CreditCard, FileText, Settings } from 'lucide-react';
 
 const AdminDashboard = () => {
-  const { session, supabase } = useSupabase();
+  const { session, isAdmin, supabase } = useSupabase();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!session) {
+      navigate('/login'); // Redirect to login if not authenticated
+    } else if (!isAdmin) {
+      navigate('/dashboard'); // Redirect to user dashboard if not admin
+    }
+  }, [session, isAdmin, navigate]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate('/login');
   };
 
-  if (!session) {
-    // This case should ideally be handled by SessionContextProvider redirecting to /login
-    // but as a fallback, we can show a message or redirect here.
-    return (
-      <div className="min-h-[calc(100vh-16rem)] flex items-center justify-center text-vf-gray text-xl sm:text-2xl">
-        Accès refusé. Veuillez vous connecter.
-      </div>
-    );
+  if (!session || !isAdmin) {
+    return null; // Render nothing while redirecting
   }
 
   return (

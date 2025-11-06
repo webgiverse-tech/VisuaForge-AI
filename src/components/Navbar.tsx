@@ -19,7 +19,7 @@ import { useSupabase } from './SessionContextProvider';
 import { useIsMobile } from '@/hooks/use-mobile'; // Import useIsMobile hook
 
 const Navbar = () => {
-  const { session, supabase } = useSupabase();
+  const { session, supabase, profile, isAdmin } = useSupabase(); // Get profile and isAdmin
   const navigate = useNavigate();
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
   const isMobile = useIsMobile(); // Use the hook to determine if it's a mobile screen
@@ -102,9 +102,16 @@ const Navbar = () => {
           ))}
 
           {session ? (
-            <VisuaForgeButton size="sm" variant="destructive" onClick={handleLogout} className="text-lg px-4 py-2">
-              <LogOut className="mr-2 h-4 w-4" /> Déconnexion
-            </VisuaForgeButton>
+            <>
+              <Link to={isAdmin ? "/admin/dashboard" : "/dashboard"}>
+                <VisuaForgeButton variant="ghost" size="sm" className="text-lg px-4 py-2">
+                  <LayoutDashboard className="mr-2 h-4 w-4" /> Tableau de Bord
+                </VisuaForgeButton>
+              </Link>
+              <VisuaForgeButton size="sm" variant="destructive" onClick={handleLogout} className="text-lg px-4 py-2">
+                <LogOut className="mr-2 h-4 w-4" /> Déconnexion
+              </VisuaForgeButton>
+            </>
           ) : (
             <Link to="/login">
               <VisuaForgeButton size="sm" className="text-lg px-4 py-2">
@@ -170,11 +177,11 @@ const Navbar = () => {
                   {session ? (
                     <>
                       <Link
-                        to="/admin/dashboard"
+                        to={isAdmin ? "/admin/dashboard" : "/dashboard"}
                         className="flex items-center space-x-3 text-vf-blue hover:text-vf-purple transition-colors text-base sm:text-lg font-medium mb-2"
                         onClick={() => setIsSheetOpen(false)}
                       >
-                        <LayoutDashboard className="mr-2 h-5 w-5" /> Tableau de Bord Admin
+                        <LayoutDashboard className="mr-2 h-5 w-5" /> Tableau de Bord
                       </Link>
                       <VisuaForgeButton
                         variant="destructive"
