@@ -99,45 +99,12 @@ const Navbar = () => {
             )
           ))}
 
-          {/* Admin Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <VisuaForgeButton variant="ghost" className="text-vf-blue hover:text-vf-purple">
-                Admin
-              </VisuaForgeButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 bg-vf-dark border-vf-gray text-white">
-              {session ? (
-                <>
-                  <DropdownMenuItem asChild>
-                    <Link to="/admin/dashboard" className="flex items-center text-vf-blue hover:text-vf-purple">
-                      <LayoutDashboard className="mr-2 h-4 w-4" /> Tableau de Bord
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator className="bg-vf-gray" />
-                  <DropdownMenuItem onClick={handleLogout} className="flex items-center text-red-500 hover:text-red-400">
-                    <LogOut className="mr-2 h-4 w-4" /> Déconnexion
-                  </DropdownMenuItem>
-                </>
-              ) : (
-                <>
-                  <DropdownMenuItem asChild>
-                    <Link to="/login" className="flex items-center text-vf-blue hover:text-vf-purple">
-                      <LogIn className="mr-2 h-4 w-4" /> Se connecter
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/register" className="flex items-center text-vf-blue hover:text-vf-purple">
-                      <UserPlus className="mr-2 h-4 w-4" /> S'inscrire
-                    </Link>
-                  </DropdownMenuItem>
-                </>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* Login Button (visible if not logged in) */}
-          {!session && (
+          {/* Conditional Login/Logout Button */}
+          {session ? (
+            <VisuaForgeButton size="sm" variant="destructive" onClick={handleLogout} className="text-lg px-4 py-2">
+              <LogOut className="mr-2 h-4 w-4" /> Déconnexion
+            </VisuaForgeButton>
+          ) : (
             <Link to="/login">
               <VisuaForgeButton size="sm" className="text-lg px-4 py-2">
                 <LogIn className="mr-2 h-4 w-4" /> Se connecter
@@ -150,7 +117,7 @@ const Navbar = () => {
         <div className="md:hidden flex items-center">
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
-              <VisuaForgeButton variant="ghost" size="icon" className="hover:bg-vf-gray/20"> {/* Added hover style for custom button */}
+              <VisuaForgeButton variant="ghost" size="icon" className="hover:bg-vf-gray/20">
                 <Menu className="h-6 w-6 text-vf-blue" />
                 <span className="sr-only">Toggle navigation menu</span>
               </VisuaForgeButton>
@@ -194,6 +161,7 @@ const Navbar = () => {
                 <div className="border-t border-vf-gray pt-4 mt-4">
                   {session ? (
                     <>
+                      {/* Link to Admin Dashboard for authenticated users in mobile menu */}
                       <Link
                         to="/admin/dashboard"
                         className="flex items-center space-x-3 text-vf-blue hover:text-vf-purple transition-colors text-lg font-medium mb-2"

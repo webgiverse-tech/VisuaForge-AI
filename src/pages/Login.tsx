@@ -5,8 +5,15 @@ import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner'; // Import toast for error messages
 
 const Login = () => {
+  // The onError prop is not supported by @supabase/auth-ui-react's Auth component.
+  // Error handling for auth events is typically managed via onAuthStateChange in SessionContextProvider.
+  // const handleAuthError = (error: Error) => {
+  //   toast.error(error.message || "Une erreur est survenue lors de la connexion.");
+  // };
+
   return (
     <motion.div
       className="min-h-[calc(100vh-16rem)] flex items-center justify-center py-12"
@@ -15,7 +22,7 @@ const Login = () => {
       transition={{ duration: 0.5 }}
     >
       <div className="w-full max-w-md bg-vf-dark/60 backdrop-blur-md p-8 rounded-xl shadow-2xl border border-vf-gray">
-        <h1 className="text-4xl font-bold text-vf-blue text-center mb-8">Connexion Admin</h1>
+        <h1 className="text-4xl font-bold text-vf-blue text-center mb-8">Connexion</h1>
         <Auth
           supabaseClient={supabase}
           providers={[]} // No third-party providers for now
@@ -37,6 +44,7 @@ const Login = () => {
           }}
           theme="dark" // Use dark theme to match app style
           redirectTo={window.location.origin + '/admin/dashboard'}
+          // onError={handleAuthError} // Removed as this prop does not exist
         />
         <p className="mt-6 text-center text-vf-gray">
           Pas encore de compte ? <a href="/register" className="text-vf-blue hover:underline">Inscris-toi ici</a>.
