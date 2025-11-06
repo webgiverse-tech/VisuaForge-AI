@@ -59,15 +59,15 @@ const Navbar = () => {
           <span>VisuaForge AI</span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-6">
+        {/* Desktop Navigation (visible on lg screens and up) */}
+        <div className="hidden lg:flex items-center space-x-6">
           {navItems.map((item) => (
             item.submenu ? (
               <DropdownMenu key={item.name}>
                 <DropdownMenuTrigger asChild>
                   <VisuaForgeButton variant="ghost" className="flex items-center space-x-2 text-vf-blue hover:text-vf-purple px-3 py-2">
                     <item.icon className="w-5 h-5" />
-                    <span className="text-base md:text-lg font-medium">{item.name}</span>
+                    <span className="text-lg font-medium">{item.name}</span>
                     <ChevronDown className="ml-1 h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-180" />
                   </VisuaForgeButton>
                 </DropdownMenuTrigger>
@@ -91,7 +91,7 @@ const Navbar = () => {
                 )}
               >
                 <item.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                <span className="text-base md:text-lg font-medium">
+                <span className="text-lg font-medium">
                   {item.name}
                 </span>
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-vf-purple group-hover:w-full transition-all duration-300"></span>
@@ -99,25 +99,30 @@ const Navbar = () => {
             )
           ))}
 
-          {/* Conditional Login/Logout Button */}
           {session ? (
-            <VisuaForgeButton size="sm" variant="destructive" onClick={handleLogout} className="text-base md:text-lg px-4 py-2">
+            <VisuaForgeButton size="sm" variant="destructive" onClick={handleLogout} className="text-lg px-4 py-2">
               <LogOut className="mr-2 h-4 w-4" /> Déconnexion
             </VisuaForgeButton>
           ) : (
             <Link to="/login">
-              <VisuaForgeButton size="sm" className="text-base md:text-lg px-4 py-2">
+              <VisuaForgeButton size="sm" className="text-lg px-4 py-2">
                 <LogIn className="mr-2 h-4 w-4" /> Se connecter
               </VisuaForgeButton>
             </Link>
           )}
         </div>
 
-        {/* Mobile Navigation (including tablets) */}
-        <div className="md:hidden flex items-center">
+        {/* Mobile & Tablet Navigation (visible on screens smaller than lg) */}
+        <div className="lg:hidden flex items-center">
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
-              <VisuaForgeButton variant="outline" size="icon" className="hover:bg-vf-gray/20 border-vf-blue text-vf-blue">
+              {/* Tablet Menu Button (visible on md screens, hidden on sm and lg) */}
+              <VisuaForgeButton variant="secondary" className="hidden md:flex text-base px-4 py-2">
+                <Menu className="h-5 w-5 mr-2" /> Menu
+                <span className="sr-only">Toggle navigation menu</span>
+              </VisuaForgeButton>
+              {/* Mobile Menu Button (visible on sm screens, hidden on md and lg) */}
+              <VisuaForgeButton variant="outline" size="icon" className="flex md:hidden hover:bg-vf-gray/20 border-vf-blue text-vf-blue">
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle navigation menu</span>
               </VisuaForgeButton>
@@ -161,7 +166,6 @@ const Navbar = () => {
                 <div className="border-t border-vf-gray pt-4 mt-4">
                   {session ? (
                     <>
-                      {/* Link to Admin Dashboard for authenticated users in mobile menu */}
                       <Link
                         to="/admin/dashboard"
                         className="flex items-center space-x-3 text-vf-blue hover:text-vf-purple transition-colors text-base sm:text-lg font-medium mb-2"
