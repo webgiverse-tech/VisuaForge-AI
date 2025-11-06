@@ -146,11 +146,11 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation (including tablets) */}
         <div className="md:hidden flex items-center">
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
-              <VisuaForgeButton variant="ghost" size="icon">
+              <VisuaForgeButton variant="ghost" size="icon" className="hover:bg-vf-gray/20"> {/* Added hover style for custom button */}
                 <Menu className="h-6 w-6 text-vf-blue" />
                 <span className="sr-only">Toggle navigation menu</span>
               </VisuaForgeButton>
