@@ -5,15 +5,9 @@ import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
-// import { toast } from 'sonner'; // No longer needed if onError is removed
+import { frenchLocalization } from '@/utils/authLocalization'; // Import the French localization
 
 const Login = () => {
-  // The onError prop is not supported by @supabase/auth-ui-react's Auth component.
-  // Error handling for auth events is typically managed via onAuthStateChange in SessionContextProvider.
-  // const handleAuthError = (error: Error) => {
-  //   toast.error(error.message || "Une erreur est survenue lors de la connexion.");
-  // };
-
   return (
     <motion.div
       className="min-h-[calc(100vh-16rem)] flex items-center justify-center py-12"
@@ -44,7 +38,8 @@ const Login = () => {
           }}
           theme="dark" // Use dark theme to match app style
           redirectTo={window.location.origin + '/admin/dashboard'}
-          // onError={handleAuthError} // Removed as this prop does not exist
+          localization={frenchLocalization} // Apply French localization
+          view="sign_in" // Explicitly set the view to sign_in
         />
         <p className="mt-6 text-center text-sm sm:text-base text-vf-gray">
           Pas encore de compte ? <a href="/register" className="text-vf-blue hover:underline">Inscris-toi ici</a>.
