@@ -3,14 +3,32 @@
 import React, { useEffect, useState } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { useSupabase } from '@/components/SessionContextProvider';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { VisuaForgeButton } from '@/components/VisuaForgeButton';
-import { User, Image, Sparkles, CreditCard, Settings, Download, Share2, Trash2, BarChart, Zap, Crown } from 'lucide-react';
+import { User, Image, Sparkles, CreditCard, Settings, Download, Share2, Trash2, BarChart, Zap, Crown, LogOut } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale'; // Import French locale for date formatting
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'; // Import Select components
+import { fr } from 'date-fns/locale';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Bar, BarChart as RechartsBarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
+import ScannerLoader from '@/components/ScannerLoader'; // Import ScannerLoader
 
 interface GeneratedImage {
   id: string;
@@ -21,20 +39,47 @@ interface GeneratedImage {
   created_at: string;
 }
 
+const formSchema = z.object({
+  email: z.string().email("Adresse e-mail invalide").optional(),
+  password: z.string().min(6, "Le mot de passe doit contenir au moins 6 caractères").optional().or(z.literal('')),
+});
+
+type ProfileFormValues = z.infer<typeof formSchema>;
+
 const Dashboard = () => {
   const { session, profile, supabase } = useSupabase();
   const navigate = useNavigate();
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
   const [loadingImages, setLoadingImages] = useState(true);
-  const [filterMode, setFilterMode] = useState<'all' | 'generate' | 'edit'>('all'); // New state for filter
+  const [filterMode, setFilterMode] = useState<'all' | 'generate' | 'edit'>('all');
+  const [chartData, setChartData] = useState<any[]>([]);
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
+
+  const form = useForm<ProfileFormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: session?.user?.email || '',
+      password: '',
+    },
+  });
 
   useEffect(() => {
     if (!session) {
       navigate('/login');
     } else {
+      form.reset({
+        email: session.user?.email || '',
+        password: '',
+      });
       fetchGeneratedImages();
     }
-  }, [session, navigate, filterMode]); // Re-fetch when filterMode changes
+  }, [session, navigate, filterMode]);
+
+  useEffect(() => {
+    if (generatedImages.length > 0) {
+      processChartData(generatedImages);
+    }
+  }, [generatedImages]);
 
   const fetchGeneratedImages = async () => {
     setLoadingImages(true);
@@ -59,6 +104,23 @@ const Dashboard = () => {
     setLoadingImages(false);
   };
 
+  const processChartData = (images: GeneratedImage[]) => {
+    const dailyCounts: { [key: string]: number } = {};
+    images.forEach(img => {
+      const date = format(new Date(img.created_at), 'yyyy-MM-dd');
+      dailyCounts[date] = (dailyCounts[date] || 0) + 1;
+    });
+
+    const sortedDates = Object.keys(dailyCounts).sort();
+    const last7Days = sortedDates.slice(-7); // Get data for the last 7 days
+
+    const data = last7Days.map(date => ({
+      name: format(new Date(date), 'dd/MM', { locale: fr }),
+      generations: dailyCounts[date],
+    }));
+    setChartData(data);
+  };
+
   const handleDownload = (imageUrl: string, prompt: string | null) => {
     const link = document.createElement('a');
     link.href = imageUrl;
@@ -81,15 +143,59 @@ const Dashboard = () => {
       .from('generated_images')
       .delete()
       .eq('id', imageId)
-      .eq('user_id', session?.user?.id); // Ensure user can only delete their own images
+      .eq('user_id', session?.user?.id);
 
     if (error) {
       console.error("Error deleting image:", error);
       toast.error("Erreur lors de la suppression de l'image.");
     } else {
       toast.success("Image supprimée avec succès !");
-      fetchGeneratedImages(); // Refresh the list
+      fetchGeneratedImages();
     }
+  };
+
+  const handleProfileUpdate = async (values: ProfileFormValues) => {
+    setIsUpdatingProfile(true);
+    try {
+      const { email, password } = values;
+      const updateData: { email?: string; password?: string } = {};
+
+      if (email && email !== session?.user?.email) {
+        updateData.email = email;
+      }
+      if (password) {
+        updateData.password = password;
+      }
+
+      if (Object.keys(updateData).length === 0) {
+        toast.info("Aucune modification à enregistrer.");
+        return;
+      }
+
+      const { error } = await supabase.auth.updateUser(updateData);
+
+      if (error) {
+        throw error;
+      }
+
+      toast.success("Profil mis à jour avec succès !");
+      form.reset({ email: email || session?.user?.email, password: '' }); // Reset form with new email, clear password
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error(`Erreur lors de la mise à jour du profil: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
+    } finally {
+      setIsUpdatingProfile(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    // In a real application, this would trigger a server-side function
+    // to delete the user and all associated data, as client-side deletion
+    // of the current user is not directly supported by Supabase client.
+    // For now, we'll just sign out and inform the user.
+    await supabase.auth.signOut();
+    toast.info("Votre compte a été déconnecté. Pour une suppression complète, veuillez contacter le support.");
+    navigate('/login');
   };
 
   const containerVariants: Variants = {
@@ -116,31 +222,42 @@ const Dashboard = () => {
   };
 
   if (!session) {
-    return null; // Redirect is handled by useEffect
+    return null;
   }
 
   const userName = profile?.first_name || session.user?.email?.split('@')[0] || 'Utilisateur';
-  const userRole = profile?.role || 'user'; // Default to 'user' if not found
+  const userRole = profile?.role || 'user';
 
   return (
     <motion.div
-      className="min-h-[calc(100vh-16rem)] py-12 px-4"
+      className="min-h-[calc(100vh-16rem)] py-12 px-4 relative z-10"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
-      <motion.h1
-        className="text-[clamp(2.5rem,5vw,3.5rem)] font-extrabold text-vf-blue text-center mb-4"
+      {/* Hero Section */}
+      <motion.section
+        className="text-center mb-20 bg-vf-dark/60 backdrop-blur-md p-8 rounded-xl shadow-2xl border border-vf-gray animate-fade-in"
         variants={itemVariants}
       >
-        Salut {userName}, prêt à créer quelque chose de grand ? 👋
-      </motion.h1>
-      <motion.p
-        className="text-[clamp(1rem,2vw,1.25rem)] text-vf-gray text-center mb-12 max-w-3xl mx-auto"
-        variants={itemVariants}
-      >
-        Bienvenue sur ton tableau de bord personnel VisuaForge AI.
-      </motion.p>
+        <motion.h1
+          className="text-[clamp(2.5rem,5vw,3.5rem)] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-vf-blue to-vf-purple mb-4 leading-tight animate-pulse-light"
+          variants={itemVariants}
+        >
+          👋 Bonjour {userName}, prêt à créer une nouvelle œuvre aujourd’hui ?
+        </motion.h1>
+        <motion.p
+          className="text-[clamp(1rem,2vw,1.25rem)] text-vf-gray mb-8 max-w-3xl mx-auto"
+          variants={itemVariants}
+        >
+          Explore tes créations, suis ta progression et gère ton compte.
+        </motion.p>
+        <Link to="/generate">
+          <VisuaForgeButton size="lg" className="text-[clamp(1rem,2vw,1.25rem)] px-8 py-4 animate-glow">
+            <Sparkles className="mr-2 h-5 w-5 sm:h-6 sm:w-6" /> Créer une image maintenant
+          </VisuaForgeButton>
+        </Link>
+      </motion.section>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
         {/* User Info & Plan Card */}
@@ -154,10 +271,12 @@ const Dashboard = () => {
             <AvatarFallback className="bg-vf-purple text-white text-3xl">{userName.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
           <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-bold text-white mb-2">{userName}</h2>
-          <p className="text-[clamp(0.9rem,1.5vw,1.1rem)] text-vf-gray mb-4">Plan actuel : <span className="font-semibold text-vf-blue">{userRole === 'admin' ? 'Admin' : 'Free'}</span></p> {/* Placeholder for plan */}
-          <VisuaForgeButton variant="default" size="sm" className="mt-auto text-[clamp(0.8rem,1.5vw,1rem)] px-4 py-2">
-            <Crown className="mr-2 h-4 w-4" /> Mettre à niveau vers Pro
-          </VisuaForgeButton>
+          <p className="text-[clamp(0.9rem,1.5vw,1.1rem)] text-vf-gray mb-4">Plan actuel : <span className="font-semibold text-vf-blue">{userRole === 'admin' ? 'Admin' : 'Free'}</span></p>
+          <Link to="/premium" className="w-full">
+            <VisuaForgeButton variant="default" size="sm" className="mt-auto text-[clamp(0.8rem,1.5vw,1rem)] px-4 py-2 w-full">
+              <Crown className="mr-2 h-4 w-4" /> Mettre à niveau vers Pro
+            </VisuaForgeButton>
+          </Link>
         </motion.div>
 
         {/* Generation History Card */}
@@ -182,7 +301,9 @@ const Dashboard = () => {
             </Select>
           </div>
           {loadingImages ? (
-            <div className="flex justify-center items-center h-40 text-vf-gray">Chargement des images...</div>
+            <div className="flex justify-center items-center h-40">
+              <ScannerLoader className="w-16 h-16" />
+            </div>
           ) : generatedImages.length === 0 ? (
             <div className="text-center text-vf-gray py-10">
               <Sparkles className="w-12 h-12 mx-auto mb-4 text-vf-blue" />
@@ -190,12 +311,18 @@ const Dashboard = () => {
               <p className="text-[clamp(0.8rem,1.5vw,1rem)] mt-2">Commence à créer pour les voir apparaître ici !</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <motion.div
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
               {generatedImages.map((img) => (
                 <motion.div
                   key={img.id}
                   className="relative group overflow-hidden rounded-lg shadow-lg border border-vf-gray"
-                  whileHover={{ scale: 1.05, boxShadow: "0 0 15px rgba(0, 191, 255, 0.4)" }}
+                  variants={itemVariants}
+                  whileHover={{ scale: 1.05, boxShadow: "0 0 15px rgba(0, 191, 255, 0.4)", rotateY: 5, rotateX: 5 }}
                   transition={{ duration: 0.2 }}
                 >
                   <img src={img.image_url} alt={img.prompt || "Image générée"} className="w-full h-48 object-cover" />
@@ -216,7 +343,7 @@ const Dashboard = () => {
                   </div>
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
           )}
         </motion.div>
 
@@ -231,8 +358,24 @@ const Dashboard = () => {
           </h2>
           <div className="space-y-4 text-[clamp(0.9rem,1.5vw,1.1rem)]">
             <p className="flex justify-between items-center">Total de générations : <span className="font-semibold text-white">{generatedImages.length}</span></p>
-            <p className="flex justify-between items-center">Générations restantes : <span className="font-semibold text-white">Illimité (Free)</span></p> {/* Placeholder */}
-            <p className="text-vf-gray italic">Graphique d'évolution hebdomadaire (à venir)</p>
+            <p className="flex justify-between items-center">Générations restantes : <span className="font-semibold text-white">Illimité (Free)</span></p>
+            <motion.div
+              className="mt-6 h-40 w-full"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <RechartsBarChart data={chartData}>
+                  <XAxis dataKey="name" stroke="#A0A0A0" tick={{ fontSize: 10 }} />
+                  <YAxis stroke="#A0A0A0" tick={{ fontSize: 10 }} />
+                  <Tooltip cursor={{ fill: 'rgba(0, 191, 255, 0.1)' }} contentStyle={{ backgroundColor: '#0A0A0A', border: '1px solid #00BFFF', borderRadius: '8px' }} itemStyle={{ color: '#00BFFF' }} />
+                  <Bar dataKey="generations" fill="#8A2BE2" radius={[4, 4, 0, 0]} />
+                </RechartsBarChart>
+              </ResponsiveContainer>
+              <p className="text-vf-gray italic text-center text-sm mt-2">Générations des 7 derniers jours</p>
+            </motion.div>
           </div>
         </motion.div>
 
@@ -247,9 +390,11 @@ const Dashboard = () => {
           </h2>
           <div className="space-y-4 text-[clamp(0.9rem,1.5vw,1.1rem)]">
             <p>Ton plan actuel : <span className="font-semibold text-vf-blue">{userRole === 'admin' ? 'Admin' : 'Free'}</span></p>
-            <VisuaForgeButton variant="default" size="sm" className="w-full text-[clamp(0.8rem,1.5vw,1rem)] px-4 py-2">
-              <Zap className="mr-2 h-4 w-4" /> Mettre à niveau vers Pro
-            </VisuaForgeButton>
+            <Link to="/premium" className="w-full">
+              <VisuaForgeButton variant="default" size="sm" className="w-full text-[clamp(0.8rem,1.5vw,1rem)] px-4 py-2">
+                <Zap className="mr-2 h-4 w-4" /> Mettre à niveau vers Pro
+              </VisuaForgeButton>
+            </Link>
             <p className="text-vf-gray italic">Historique des paiements (à venir)</p>
           </div>
         </motion.div>
@@ -263,17 +408,59 @@ const Dashboard = () => {
           <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-bold text-vf-blue mb-6 flex items-center">
             <Settings className="mr-3 h-6 w-6" /> Paramètres du compte
           </h2>
-          <div className="space-y-4 text-[clamp(0.9rem,1.5vw,1.1rem)]">
+          <form onSubmit={form.handleSubmit(handleProfileUpdate)} className="space-y-4">
+            <div>
+              <Label htmlFor="email" className="text-[clamp(0.8rem,1.5vw,1rem)] text-vf-blue mb-2 block">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                {...form.register("email")}
+                className="bg-vf-gray/30 border-vf-gray text-[clamp(0.8rem,1.5vw,1rem)] text-white placeholder:text-vf-gray focus:border-vf-blue focus:ring-vf-blue"
+              />
+              {form.formState.errors.email && (
+                <p className="text-red-500 text-sm mt-1">{form.formState.errors.email.message}</p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="password" className="text-[clamp(0.8rem,1.5vw,1rem)] text-vf-blue mb-2 block">Nouveau mot de passe</Label>
+              <Input
+                id="password"
+                type="password"
+                {...form.register("password")}
+                placeholder="Laisser vide pour ne pas changer"
+                className="bg-vf-gray/30 border-vf-gray text-[clamp(0.8rem,1.5vw,1rem)] text-white placeholder:text-vf-gray focus:border-vf-blue focus:ring-vf-blue"
+              />
+              {form.formState.errors.password && (
+                <p className="text-red-500 text-sm mt-1">{form.formState.errors.password.message}</p>
+              )}
+            </div>
+            <VisuaForgeButton type="submit" disabled={isUpdatingProfile} size="sm" className="w-full text-[clamp(0.8rem,1.5vw,1rem)] px-4 py-2">
+              {isUpdatingProfile ? 'Mise à jour...' : 'Mettre à jour le profil'}
+            </VisuaForgeButton>
+          </form>
+          <div className="mt-6 space-y-2">
             <VisuaForgeButton variant="outline" size="sm" className="w-full text-[clamp(0.8rem,1.5vw,1rem)] px-4 py-2">
-              Modifier le profil
+              Préférences UI (à venir)
             </VisuaForgeButton>
-            <VisuaForgeButton variant="outline" size="sm" className="w-full text-[clamp(0.8rem,1.5vw,1rem)] px-4 py-2">
-              Changer le mot de passe
-            </VisuaForgeButton>
-            <VisuaForgeButton variant="destructive" size="sm" className="w-full text-[clamp(0.8rem,1.5vw,1rem)] px-4 py-2">
-              Supprimer le compte
-            </VisuaForgeButton>
-            <p className="text-vf-gray italic">Préférences UI (thème, notifications) (à venir)</p>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <VisuaForgeButton variant="destructive" size="sm" className="w-full text-[clamp(0.8rem,1.5vw,1rem)] px-4 py-2">
+                  Supprimer le compte
+                </VisuaForgeButton>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="bg-vf-dark border-vf-blue text-white">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-vf-blue">Êtes-vous absolument sûr ?</AlertDialogTitle>
+                  <AlertDialogDescription className="text-vf-gray">
+                    Cette action ne peut pas être annulée. Cela supprimera définitivement votre compte et toutes vos données de nos serveurs.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="bg-vf-gray/30 text-white hover:bg-vf-gray/50 border-vf-gray">Annuler</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeleteAccount} className="bg-red-600 text-white hover:bg-red-700">Supprimer mon compte</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </motion.div>
       </div>
